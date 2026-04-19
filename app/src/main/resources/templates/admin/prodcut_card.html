@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicStore | Карточка товара (Администратор)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
+            background-color: #f2efe7;
+            padding: 32px 40px;
+            color: #2c2b28;
+        }
+
+        .app-container {
+            max-width: 1440px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 28px;
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+        }
+
+        .main-header {
+            padding: 20px 32px;
+            background-color: #fefaf5;
+            border-bottom: 1px solid #eae4db;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .logo-emojy {
+            font-size: 48px;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+        }
+
+        .store-title {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: #3b3a36;
+        }
+
+        .role-badge {
+            background-color: #3b3a36;
+            color: white;
+            padding: 5px 14px;
+            border-radius: 40px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            color: #4a4843;
+            padding-bottom: 4px;
+            transition: color 0.2s;
+        }
+
+        .nav-menu a.active-nav {
+            color: #2b2a27;
+            font-weight: 700;
+            border-bottom: 3px solid #b9b0a2;
+        }
+
+        .breadcrumb-block {
+            padding: 24px 32px 0 32px;
+            font-size: 14px;
+            color: #9b9288;
+        }
+
+        .breadcrumb-block a {
+            color: #5f5b54;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .breadcrumb-block span {
+            margin: 0 6px;
+            color: #cfc6bc;
+        }
+
+        .action-top {
+            padding: 16px 32px 0 32px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .btn-back-link {
+            background-color: #f4f0ea;
+            color: #4a4843;
+            border: 1px solid #e0d6cc;
+            padding: 9px 26px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-back-link:hover {
+            background-color: #e9e1d8;
+            border-color: #cfc3b7;
+        }
+
+        .product-core {
+            padding: 24px 32px 40px 32px;
+            display: flex;
+            gap: 48px;
+            flex-wrap: wrap;
+        }
+
+        .gallery-area {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .primary-image {
+            background-color: #f6f2ec;
+            border-radius: 28px;
+            border: 1px solid #e9dfd6;
+            height: 420px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .cross-img-main {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .thumb-row {
+            display: flex;
+            gap: 14px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .thumb-item {
+            width: 88px;
+            height: 88px;
+            background-color: #f9f5ef;
+            border: 1px solid #e2d8cf;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .thumb-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .info-area {
+            flex: 1;
+            min-width: 380px;
+        }
+
+        .edit-field {
+            margin-bottom: 24px;
+        }
+
+        .edit-field label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            color: #5f5b54;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .edit-field input,
+        .edit-field select,
+        .edit-field textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e0d6cc;
+            border-radius: 20px;
+            font-size: 15px;
+            font-family: inherit;
+            background-color: #fefcf9;
+            color: #2e2c28;
+            transition: all 0.2s;
+        }
+
+        .edit-field input:focus,
+        .edit-field select:focus,
+        .edit-field textarea:focus {
+            outline: none;
+            border-color: #b9b0a2;
+            background-color: #ffffff;
+        }
+
+        .edit-field textarea {
+            resize: vertical;
+            min-height: 110px;
+        }
+
+        .add-to-supply {
+            margin-top: 28px;
+            padding-top: 24px;
+            border-top: 1px solid #efe6de;
+        }
+
+        .add-to-supply h4 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #3b3a36;
+        }
+
+        .supply-row {
+            display: flex;
+            gap: 20px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+
+        .quantity-field {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .quantity-field label {
+            display: block;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 8px;
+            color: #5f5b54;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .quantity-input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #e0d6cc;
+            border-radius: 20px;
+            font-size: 15px;
+            font-family: inherit;
+            background-color: #fefcf9;
+            color: #2e2c28;
+        }
+
+        .btn-add-to-supply {
+            background-color: #3b3a36;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 56px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .btn-add-to-supply:hover {
+            background-color: #54524c;
+        }
+
+        .save-actions {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid #efe6de;
+        }
+
+        .btn-save {
+            background-color: #3b3a36;
+            color: white;
+            border: none;
+            padding: 14px 0;
+            width: 100%;
+            border-radius: 56px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-save:hover {
+            background-color: #54524c;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="main-header">
+        <div class="header-row">
+            <div class="brand">
+                <div class="logo-emojy">🎸</div>
+                <div class="store-title">MuseLand<span class="role-badge">Администратор</span></div>
+            </div>
+            <div class="nav-menu">
+                <a href="#" class="active-nav">Каталог</a>
+                <a href="#">Продавцы</a>
+                <a href="#">Клиенты</a>
+                <a href="#">Заказы</a>
+                <a href="#">Покупки</a>
+                <a href="#">Поставки</a>
+                <a href="#">Выйти</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="breadcrumb-block">
+        <a href="#">Каталог</a> <span>/</span> 
+        <a href="#">Электрогитары</a> <span>/</span> 
+        <span style="color:#5f5b54; font-weight:500;">Fender Stratocaster</span>
+    </div>
+
+    <div class="action-top">
+        <a href="#" class="btn-back-link">← Назад к каталогу</a>
+    </div>
+
+    <div class="product-core">
+        <div class="gallery-area">
+            <div class="primary-image">
+                <img class="cross-img-main" src="C:\Users\Admin\Downloads\cat.jpg" alt="Fender Stratocaster">
+            </div>
+            <div class="thumb-row">
+                <div class="thumb-item">
+                    <img class="thumb-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e2d4c4'/%3E%3Cline x1='25' y1='25' x2='75' y2='75' stroke='%237a6855' stroke-width='6' stroke-linecap='round'/%3E%3Cline x1='75' y1='25' x2='25' y2='75' stroke='%237a6855' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" alt="thumb 1">
+                </div>
+                <div class="thumb-item">
+                    <img class="thumb-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23dccfb9'/%3E%3Cline x1='28' y1='28' x2='72' y2='72' stroke='%2384715b' stroke-width='7' stroke-linecap='round'/%3E%3Cline x1='72' y1='28' x2='28' y2='72' stroke='%2384715b' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E" alt="thumb 2">
+                </div>
+                <div class="thumb-item">
+                    <img class="thumb-img" src="C:\Users\Admin\Downloads\cat.jpg" alt="thumb 3">
+                </div>
+                <div class="thumb-item">
+                    <img class="thumb-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e7dbc9'/%3E%3Cline x1='30' y1='30' x2='70' y2='70' stroke='%23806b53' stroke-width='8' stroke-linecap='round'/%3E%3Cline x1='70' y1='30' x2='30' y2='70' stroke='%23806b53' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E" alt="thumb 4">
+                </div>
+            </div>
+        </div>
+
+        <div class="info-area">
+            <div class="edit-field">
+                <label>Название товара</label>
+                <input type="text" name="product_name" value="Электрогитара Fender Stratocaster">
+            </div>
+
+            <div class="edit-field">
+                <label>Категория</label>
+                <select class="product-category-select" name="category">
+                    <option value="1" selected>Электрогитары</option>
+                    <option value="2">Акустические гитары</option>
+                    <option value="3">Клавишные</option>
+                    <option value="4">Ударные</option>
+                    <option value="5">Звуковое оборудование</option>
+                    <option value="6">Аксессуары</option>
+                </select>
+            </div>
+
+            <div class="edit-field">
+                <label>Цена (₽)</label>
+                <input type="number" name="price" value="89900" step="100">
+            </div>
+
+            <div class="edit-field">
+                <label>Количество на складе (шт.)</label>
+                <input type="number" name="stock" value="7" min="0">
+            </div>
+
+            <div class="edit-field">
+                <label>Описание</label>
+                <textarea name="description">Культовая электрогитара Fender Stratocaster с классическим звучанием. Корпус из ольхи, гриф из клена, 21 лад. Идеально подходит для рока, блюза и поп-музыки. В комплекте: чехол, ремень, набор струн.</textarea>
+            </div>
+
+            <div class="add-to-supply">
+                <h4>Добавить в поставку</h4>
+                <div class="supply-row">
+                    <div class="quantity-field">
+                        <label>Количество</label>
+                        <input type="number" class="quantity-input" name="supply_qty" value="1" min="1">
+                    </div>
+                    <button type="button" class="btn-add-to-supply">Добавить в поставку</button>
+                </div>
+            </div>
+
+            <div class="save-actions">
+                <button type="submit" class="btn-save" form="productEditForm">Сохранить изменения</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
