@@ -17,6 +17,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import musicshop.config.SecurityConfig.Roles;
 
 @Entity
 @Table(name = "clients")
@@ -43,7 +44,7 @@ public class Client implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(Roles.CLIENT);
     }
 
     @Override

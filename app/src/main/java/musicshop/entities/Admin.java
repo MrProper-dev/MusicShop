@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import musicshop.config.SecurityConfig.Roles;
 
 @Entity
 @Table(name = "admins")
@@ -53,7 +54,7 @@ public class Admin implements UserDetails{
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return List.of(Roles.ADMIN);
     }
 
     @Override

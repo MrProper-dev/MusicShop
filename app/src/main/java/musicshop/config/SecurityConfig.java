@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,7 +24,6 @@ import musicshop.repositories.SellerRepository;
 
 @Configuration
 @EnableWebSecurity
-//TODO: не при входе в один аккаунт не нужно входить в другие
 public class SecurityConfig{
 
     @Bean
@@ -37,7 +37,7 @@ public class SecurityConfig{
         return http
         .securityMatcher("/seller/**")
         .authorizeHttpRequests(auth -> auth
-            .anyRequest().authenticated()
+            .anyRequest().hasRole("SELLER")
         )
         .formLogin(form -> form
             .loginPage("/seller/login")
@@ -56,7 +56,7 @@ public class SecurityConfig{
         return http
         .securityMatcher("/admin/**")
         .authorizeHttpRequests(auth -> auth
-            .anyRequest().authenticated()
+            .anyRequest().hasRole("ADMIN")
         )
         .formLogin(form -> form
             .loginPage("/admin/login")
@@ -75,10 +75,11 @@ public class SecurityConfig{
         return http
         .securityMatcher("/**")
         .authorizeHttpRequests(auth -> auth
-            .anyRequest().authenticated()
+            .anyRequest().hasRole("CLIENT")
         )
         .formLogin(form -> form
             .loginPage("/login")
+            .loginProcessingUrl("/login")
             .usernameParameter("phone")
             .permitAll()
         )
@@ -129,7 +130,7 @@ public class SecurityConfig{
         public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
             Seller seller = sellerRepository.findByLogin(login);
             if (seller == null) {
-                throw new UsernameNotFoundException("Client not found: " + login);
+                throw new UsernameNotFoundException("Seller not found: " + login);
             }
             return seller;
         }
@@ -146,11 +147,23 @@ public class SecurityConfig{
         public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
             Admin admin = adminRepository.findByLogin(login);
             if (admin == null) {
-                throw new UsernameNotFoundException("Client not found: " + login);
+                throw new UsernameNotFoundException("Admin not found: " + login);
             }
             return admin;
         }
 
     }
+
+    public static enum Roles implements GrantedAuthority{
+        CLIENT,
+        SELLER,
+        ADMIN;
+
+        @Override
+        public String getAuthority() {
+            return "ROLE_" + name();
+        }
+
+    } 
 
 }
