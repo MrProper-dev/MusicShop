@@ -21,4 +21,10 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
     @Query("select new musicshop.dto.ProductPreviewForClientDto(p.id, p.name, p.price, pic.path) from Product p left join p.pictures pic on pic.isMain = true where p.category.id in :categoryIds and p.price between :from and :to")
     public Page<ProductPreviewForClientDto> findAllWithoutCategoryAndPicturesAndDescriptionByCategoryIdsAndPrice(Pageable pageable, @Param("categoryIds") List<Integer> categoryIds, @Param("from") Integer from, @Param("to") Integer to);
 
+    @Query("select new musicshop.dto.ProductPreviewForClientDto(p.id, p.name, p.price, pic.path) from Product p left join p.pictures pic on pic.isMain = true where lower(p.name) like lower(concat('%', :name, '%'))")
+    public Page<ProductPreviewForClientDto> findAllWithoutCategoryAndPicturesAndDescriptionBySearchName(Pageable pageable, @Param("name") String name);
+
+    @Query("select p from Product p join fetch p.pictures join fetch p.category where p.id = :id")
+    public Product findByIdWithFullData(@Param("id") Long id);
+
 }

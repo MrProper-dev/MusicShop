@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MusicStore | Каталог товаров</title>
     <link rel="stylesheet" href="/client/css/products_list.css">
+    <script src="/client/js/products_list.js" defer></script>
 </head>
 <body>
 <div class="app-container">
@@ -16,7 +17,7 @@
                 <div class="store-title">MuseLand</div>
             </div>
             <div class="nav-menu">
-                <a href="" class="active-nav">Каталог</a>
+                <a href="/products" class="active-nav">Каталог</a>
                 <a href="/orders">Заказы</a>
                 <a href="/profile">Профиль</a>
                 <a href="/basket">Корзина</a>
@@ -27,7 +28,7 @@
     
     <div class="search-area">
         <div class="search-field">
-            <input type="text" name="search_query" placeholder="Поиск по названию" form="searchForm">
+            <input type="text" name="search" placeholder="Поиск по названию" form="searchForm">
         </div>
         <form id="searchForm" action="#" method="get" style="margin:0;">
             <button type="submit" class="search-submit">🔍 Найти</button>
@@ -66,7 +67,7 @@
                     <div class="product-details">
                         <div class="product-name" th:text="${product.name}"></div>
                         <div class="product-cost" th:text="${product.price} + '₽'"></div>
-                        <a href="'/products/' + ${product.id}" class="detail-link">Подробнее</a>
+                        <a th:href="'/products/' + ${product.id}" class="detail-link">Подробнее</a>
                     </div>
                 </div>
                 
@@ -75,12 +76,13 @@
             
             <div class="pagination-wrapper">
                 <div class="pagination-list">
-                    <a href="#" class="page-btn active-page">1</a>
-                    <a href="#" class="page-btn">2</a>
-                    <a href="#" class="page-btn">3</a>
-                    <a href="#" class="page-btn">4</a>
-                    <span class="page-btn page-dots">⋯</span>
-                    <a href="#" class="page-btn">8</a>
+                    <a th:if="${firstPage}" class="page-btn" th:text="${firstPage}"></a>
+                    <span th:if="${firstPage}" class="page-btn page-dots">⋯</span>
+                    <a th:each="page : ${pagesBefore}" class="page-btn" th:text="${page}"></a>
+                    <a class="page-btn active-page" th:text="${currentPage}"></a>
+                    <a th:each="page : ${pagesAfter}" class="page-btn" th:text="${page}"></a>
+                    <span th:if="${lastPage}" class="page-btn page-dots">⋯</span>
+                    <a th:if="${lastPage}" class="page-btn" th:text="${lastPage}"></a>
                 </div>
             </div>
         </div>
