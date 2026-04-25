@@ -355,7 +355,6 @@ body {
     background-color: #54524c;
 }
 
-/* TOAST (static, no JS) */
 .toast-message {
     position: fixed;
     bottom: 32px;
@@ -373,5 +372,5 @@ body {
     white-space: nowrap;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.2s;
+    transition: opacity 0.6s ease-in-out;
 }

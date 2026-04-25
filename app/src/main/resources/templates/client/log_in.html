@@ -4,160 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MusicStore | Вход</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
-            background-color: #f2efe7;
-            padding: 32px 40px;
-            color: #2c2b28;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .app-container {
-            max-width: 520px;
-            width: 100%;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 28px;
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
-            overflow: hidden;
-        }
-
-        .main-header {
-            padding: 28px 32px 20px 32px;
-            background-color: #fefaf5;
-            border-bottom: 1px solid #eae4db;
-            text-align: center;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-
-        .logo-emojy {
-            font-size: 52px;
-            line-height: 1;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
-        }
-
-        .store-title {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            color: #3b3a36;
-        }
-
-        .login-content {
-            padding: 40px 36px 44px 36px;
-        }
-
-        .page-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            color: #2b2a27;
-            text-align: center;
-            letter-spacing: -0.3px;
-        }
-
-        .page-subtitle {
-            text-align: center;
-            color: #8e887e;
-            font-size: 14px;
-            margin-bottom: 36px;
-        }
-
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 26px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            font-size: 14px;
-            color: #5f5b54;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-
-        .form-group input {
-            padding: 15px 18px;
-            border: 1px solid #e0d6cc;
-            border-radius: 20px;
-            font-size: 15px;
-            font-family: inherit;
-            background-color: #fefcf9;
-            color: #2e2c28;
-            transition: all 0.2s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #b9b0a2;
-            background-color: #ffffff;
-        }
-
-        .form-actions {
-            margin-top: 12px;
-        }
-
-        .btn-login {
-            width: 100%;
-            background-color: #3b3a36;
-            color: white;
-            border: none;
-            padding: 16px;
-            border-radius: 56px;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-login:hover {
-            background-color: #54524c;
-        }
-
-        .register-link {
-            text-align: center;
-            margin-top: 32px;
-            padding-top: 24px;
-            border-top: 1px solid #efe6de;
-            font-size: 14px;
-            color: #8e887e;
-        }
-
-        .register-link a {
-            color: #3b3a36;
-            text-decoration: none;
-            font-weight: 700;
-            margin-left: 6px;
-        }
-
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="/client/css/log_in.css">
+    <script src="/client/js/log_in.js" defer></script>
 </head>
 <body>
 <div class="app-container">
@@ -172,7 +20,7 @@
         <h1 class="page-title">Вход в аккаунт</h1>
         <p class="page-subtitle">Введите номер телефона и пароль</p>
 
-        <form class="login-form" action="/login" method="post">
+        <form class="login-form">
             <div class="form-group">
                 <label for="phone">Номер телефона</label>
                 <input type="tel" id="phone" name="phone" placeholder="+7 (999) 123-45-67" value="+7 (999) 123-45-67">
@@ -193,5 +41,7 @@
         </div>
     </div>
 </div>
+
+<div class="toast-message"></div>
 </body>
 </html>

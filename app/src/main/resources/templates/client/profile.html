@@ -4,206 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MusicStore | Профиль клиента</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
-            background-color: #f2efe7;
-            padding: 32px 40px;
-            color: #2c2b28;
-        }
-
-        .app-container {
-            max-width: 1440px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 28px;
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
-            overflow: hidden;
-        }
-
-        .main-header {
-            padding: 20px 32px;
-            background-color: #fefaf5;
-            border-bottom: 1px solid #eae4db;
-        }
-
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .logo-emojy {
-            font-size: 48px;
-            line-height: 1;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
-        }
-
-        .store-title {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            color: #3b3a36;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            color: #4a4843;
-            padding-bottom: 4px;
-            transition: color 0.2s;
-        }
-
-        .nav-menu a.active-nav {
-            color: #2b2a27;
-            font-weight: 700;
-            border-bottom: 3px solid #b9b0a2;
-        }
-
-        .profile-content {
-            padding: 32px;
-        }
-
-        .profile-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #efe6de;
-        }
-
-        .profile-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: #2b2a27;
-            letter-spacing: -0.3px;
-        }
-
-        .logout-btn {
-            background-color: #f4ece8;
-            color: #a34e3a;
-            border: 1px solid #e8d9d2;
-            padding: 10px 28px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .logout-btn:hover {
-            background-color: #e8d9d2;
-            border-color: #d6c2b8;
-        }
-
-        .profile-form {
-            display: flex;
-            flex-direction: column;
-            gap: 28px;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .form-group {
-            flex: 1;
-            min-width: 240px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            font-size: 14px;
-            color: #5f5b54;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #e0d6cc;
-            border-radius: 16px;
-            font-size: 15px;
-            background-color: #fefcf9;
-            color: #2e2c28;
-            transition: all 0.2s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #b9b0a2;
-            background-color: #ffffff;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 18px;
-            justify-content: flex-end;
-            margin-top: 16px;
-            padding-top: 24px;
-            border-top: 1px solid #efe6de;
-        }
-
-        .btn-save {
-            background-color: #3b3a36;
-            color: white;
-            border: none;
-            padding: 14px 38px;
-            border-radius: 48px;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-save:hover {
-            background-color: #54524c;
-        }
-
-        .btn-cancel {
-            background-color: #f4f0ea;
-            color: #4a4843;
-            border: 1px solid #e0d6cc;
-            padding: 14px 32px;
-            border-radius: 48px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-cancel:hover {
-            background-color: #e9e1d8;
-            border-color: #cfc3b7;
-        }
-    </style>
+    <link rel="stylesheet" href="/client/css/profile.css">
+    <script src="/client/js/profile.js" defer></script>
 </head>
 <body>
 <div class="app-container">
@@ -214,10 +16,10 @@
                 <div class="store-title">MuseLand</div>
             </div>
             <div class="nav-menu">
-                <a href="#">Каталог</a>
-                <a href="#">Заказы</a>
-                <a href="#" class="active-nav">Профиль</a>
-                <a href="#">Корзина</a>
+                <a href="/products">Каталог</a>
+                <a href="/orders">Заказы</a>
+                <a href="/profile" class="active-nav">Профиль</a>
+                <a href="/basket">Корзина</a>
             </div>
         </div>
     </div>
@@ -225,29 +27,29 @@
     <div class="profile-content">
         <div class="profile-header">
             <h1 class="profile-title">Профиль пользователя</h1>
-            <button class="logout-btn">Выйти из аккаунта</button>
+            <a href="/logout" class="logout-btn">Выйти из аккаунта</a>
         </div>
 
-        <form class="profile-form" action="#" method="post">
+        <form class="profile-form">
             <div class="form-row">
                 <div class="form-group">
                     <label>ФИО</label>
-                    <input type="text" name="fullname" value="Иванов Иван Иванович" placeholder="Введите ФИО">
+                    <input type="text" name="fullName" th:value="${profile.fullName}" placeholder="Введите ФИО">
                 </div>
                 <div class="form-group">
                     <label>Номер телефона</label>
-                    <input type="tel" name="phone" value="+7 (999) 123-45-67" placeholder="+7 (___) ___-__-__">
+                    <input type="tel" name="phone" th:value="${profile.phone}" placeholder="+7 (___) ___-__-__">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label>Новый пароль</label>
-                    <input type="password" name="new_password" placeholder="Введите новый пароль">
+                    <input type="password" name="newPassword" placeholder="Введите новый пароль">
                 </div>
                 <div class="form-group">
                     <label>Повторите пароль</label>
-                    <input type="password" name="confirm_password" placeholder="Повторите пароль">
+                    <input type="password" name="confirmPassword" placeholder="Повторите пароль">
                 </div>
             </div>
 
@@ -258,5 +60,7 @@
         </form>
     </div>
 </div>
+
+<div class="toast-message"></div>
 </body>
 </html>

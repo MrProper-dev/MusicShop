@@ -79,11 +79,14 @@ public class SecurityConfig{
                 "/client/css/products_list.css", 
                 "/client/js/products_list.js", 
                 "/client/css/product_card.css",
-                "/client/js/product_card.js").permitAll()
+                "/client/js/product_card.js",
+                "/client/css/log_in.css",
+                "/client/js/log_in.js").permitAll()
             .anyRequest().hasRole("CLIENT")
         )
         .formLogin(form -> form
             .loginPage("/login")
+            .defaultSuccessUrl("/products", true)
             .loginProcessingUrl("/login")
             .usernameParameter("phone")
             .permitAll()

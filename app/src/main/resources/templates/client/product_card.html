@@ -17,7 +17,7 @@
                 <div class="store-title">MuseLand</div>
             </div>
             <div class="nav-menu">
-               <a href="/products">Каталог</a>
+                <a href="/products">Каталог</a>
                 <a href="/orders">Заказы</a>
                 <a href="/profile">Профиль</a>
                 <a href="/basket">Корзина</a>
@@ -68,7 +68,7 @@
             </div>
 
             
-            <form th:action="'/api/v1/orders/product/' + ${product.id}" method="post" class="cart-action-row">
+            <form id="add-basket-form" th:data-product-id="${product.id}" class="cart-action-row">
                 <div class="quantity-selector">
                     <button id="less" type="button" class="quantity-btn">−</button>
                     <input id="quantity" type="text" name="quantity" class="quantity-input-cart" value="1">

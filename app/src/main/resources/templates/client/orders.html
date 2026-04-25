@@ -4,253 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MusicStore | История заказов</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
-            background-color: #f2efe7;
-            padding: 32px 40px;
-            color: #2c2b28;
-        }
-
-        .app-container {
-            max-width: 1440px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 28px;
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
-            overflow: hidden;
-        }
-
-        /* HEADER */
-        .main-header {
-            padding: 20px 32px;
-            background-color: #fefaf5;
-            border-bottom: 1px solid #eae4db;
-        }
-
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .logo-emojy {
-            font-size: 48px;
-            line-height: 1;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
-        }
-
-        .store-title {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            color: #3b3a36;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            color: #4a4843;
-            padding-bottom: 4px;
-            transition: color 0.2s;
-        }
-
-        .nav-menu a.active-nav {
-            color: #2b2a27;
-            font-weight: 700;
-            border-bottom: 3px solid #b9b0a2;
-        }
-
-        .nav-menu a:hover {
-            color: #1e1d1b;
-        }
-
-        /* MAIN CONTENT */
-        .orders-content {
-            padding: 32px;
-        }
-
-        .page-title {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 28px;
-            color: #2b2a27;
-            letter-spacing: -0.3px;
-        }
-
-        /* FILTERS */
-        .orders-filters {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 28px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #efe6de;
-        }
-
-        .filter-chip {
-            background-color: #f4f0ea;
-            border: 1px solid #e0d6cc;
-            padding: 8px 24px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #4a4843;
-            text-decoration: none;
-        }
-
-        .filter-chip.active {
-            background-color: #3b3a36;
-            color: white;
-            border-color: #3b3a36;
-        }
-
-        .filter-chip:hover {
-            background-color: #e9e1d8;
-            border-color: #cfc3b7;
-        }
-
-        /* ORDERS LIST */
-        .orders-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .order-card {
-            border: 1px solid #ece2d9;
-            border-radius: 24px;
-            padding: 24px;
-            background-color: #fefcf9;
-            transition: all 0.2s ease;
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 18px;
-            padding-bottom: 14px;
-            border-bottom: 1px solid #efe6de;
-        }
-
-        .order-number {
-            font-weight: 700;
-            font-size: 18px;
-            color: #2b2a27;
-        }
-
-        .order-date {
-            color: #8e887e;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .order-status {
-            padding: 5px 16px;
-            border-radius: 40px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .status-created {
-            background-color: #e8f0fe;
-            color: #2c5f8a;
-            border: 1px solid #d0e2f5;
-        }
-
-        .status-ready {
-            background-color: #e6f0e8;
-            color: #2f6b47;
-            border: 1px solid #cde0d4;
-        }
-
-        .status-issued {
-            background-color: #eef2e6;
-            color: #5a6e3a;
-            border: 1px solid #dde5cf;
-        }
-
-        .status-cancelled {
-            background-color: #f9ecea;
-            color: #a34e3a;
-            border: 1px solid #f0dbd6;
-        }
-
-        .order-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .order-items {
-            color: #5f5b54;
-            font-size: 14px;
-            line-height: 1.6;
-            flex: 2;
-        }
-
-        .order-total {
-            font-weight: 700;
-            font-size: 20px;
-            color: #2e2c28;
-            min-width: 120px;
-        }
-
-        .btn-cancel {
-            background-color: #dc7a6b;
-            color: white;
-            border: none;
-            padding: 9px 24px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-cancel:hover {
-            background-color: #c56252;
-        }
-
-        .btn-cancel-disabled {
-            background-color: #e2ddd6;
-            color: #9b9288;
-            border: none;
-            padding: 9px 24px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: not-allowed;
-        }
-    </style>
+    <link rel="stylesheet" href="/client/css/orders.css">
+    <script src="/client/js/orders.js" defer></script>
 </head>
 <body>
 <div class="app-container">
@@ -262,10 +17,10 @@
                 <div class="store-title">MuseLand</div>
             </div>
             <div class="nav-menu">
-                <a href="#">Каталог</a>
-                <a href="#" class="active-nav">Заказы</a>
-                <a href="#">Профиль</a>
-                <a href="#">Корзина</a>
+                <a href="/products">Каталог</a>
+                <a href="/orders" class="active-nav">Заказы</a>
+                <a href="/profile">Профиль</a>
+                <a href="/basket">Корзина</a>
             </div>
         </div>
     </div>
@@ -276,115 +31,43 @@
 
         
         <div class="orders-filters">
-            <a href="#" class="filter-chip active">Все</a>
-            <a href="#" class="filter-chip">Создан</a>
-            <a href="#" class="filter-chip">Готов</a>
-            <a href="#" class="filter-chip">Выдан</a>
-            <a href="#" class="filter-chip">Отменен</a>
+            <a href="/orders?status=ALL" th:class="'filter-chip' + (${currentStatus == 'ALL'} ? ' active' : '')">Все</a>
+            <a href="/orders?status=CREATED" th:class="'filter-chip' + (${currentStatus == 'CREATED'} ? ' active' : '')">Создан</a>
+            <a href="/orders?status=READY" th:class="'filter-chip' + (${currentStatus == 'READY'} ? ' active' : '')">Готов</a>
+            <a href="/orders?status=ISSUED" th:class="'filter-chip' + (${currentStatus == 'ISSUED'} ? ' active' : '')">Выдан</a>
+            <a href="/orders?status=CANCELED" th:class="'filter-chip' + (${currentStatus == 'CANCELED'} ? ' active' : '')">Отменен</a>
         </div>
 
         
         <div class="orders-list">
-            
-            <div class="order-card">
+
+            <div class="order-card" th:each="order : ${orders}">
                 <div class="order-header">
-                    <div class="order-number">Заказ № 1001</div>
-                    <div class="order-date">15 марта 2024, 14:30</div>
-                    <div class="order-status status-created">Создан</div>
+                    <div class="order-number" th:text="'Заказ № ' + ${order.id}"></div>
+                    <div class="order-date" th:text="${#temporals.format(order.timestamp, 'dd MMMM yyyy, HH:mm')}"></div>
+                    <div class="order-status" 
+                         th:class="'order-status ' + 
+                                  ${order.status == 'CREATED' ? 'status-created' :
+                                   order.status == 'READY' ? 'status-ready' :
+                                   order.status == 'ISSUED' ? 'status-issued' : 'status-cancelled'}"
+                         th:text="${order.status == 'CREATED' ? 'Создан' :
+                                 order.status == 'READY' ? 'Готов' :
+                                 order.status == 'ISSUED' ? 'Выдан' : 'Отменен'}"></div>
                 </div>
                 <div class="order-info">
                     <div class="order-items">
-                        Электрогитара Fender Stratocaster · 1 шт.<br>
-                        Гитарный усилитель Boss Katana 50 · 1 шт.
+                        <span th:each="product, iterStat : ${order.products}">
+                            <span th:text="${product.name + ' · ' + product.quantity + ' шт.'}"></span>
+                            <br th:unless="${iterStat.last}" />
+                        </span>
                     </div>
-                    <div class="order-total">117 700 ₽</div>
-                    <button class="btn-cancel">Отменить</button>
+                    <div class="order-total" th:text="${#numbers.formatDecimal(order.totalPrice, 0, 'WHITESPACE', 2, 'POINT') + ' ₽'}">117 700 ₽</div>
+                    
+                    <button th:if="${order.status == 'CREATED'}" class="btn-cancel" th:data-order-id="${order.id}">Отменить</button>
+                    <button th:unless="${order.status == 'CREATED'}" class="btn-cancel-disabled" disabled>Отменить</button>
                 </div>
             </div>
 
-            
-            <div class="order-card">
-                <div class="order-header">
-                    <div class="order-number">Заказ № 1002</div>
-                    <div class="order-date">28 февраля 2024, 11:15</div>
-                    <div class="order-status status-ready">Готов</div>
-                </div>
-                <div class="order-info">
-                    <div class="order-items">
-                        Вокальный микрофон Shure SM58 · 2 шт.<br>
-                        Кабель инструментальный 6м · 1 шт.
-                    </div>
-                    <div class="order-total">18 980 ₽</div>
-                    <button class="btn-cancel-disabled" disabled>Отменить</button>
-                </div>
-            </div>
-
-            
-            <div class="order-card">
-                <div class="order-header">
-                    <div class="order-number">Заказ № 1003</div>
-                    <div class="order-date">10 февраля 2024, 09:45</div>
-                    <div class="order-status status-created">Создан</div>
-                </div>
-                <div class="order-info">
-                    <div class="order-items">
-                        Акустическая гитара Yamaha P-125 · 1 шт.<br>
-                        Чехол для гитары · 1 шт.
-                    </div>
-                    <div class="order-total">64 490 ₽</div>
-                    <button class="btn-cancel">Отменить</button>
-                </div>
-            </div>
-
-            
-            <div class="order-card">
-                <div class="order-header">
-                    <div class="order-number">Заказ № 1004</div>
-                    <div class="order-date">25 января 2024, 16:20</div>
-                    <div class="order-status status-cancelled">Отменен</div>
-                </div>
-                <div class="order-info">
-                    <div class="order-items">
-                        Электронная ударная установка Roland TD-1K · 1 шт.
-                    </div>
-                    <div class="order-total">42 300 ₽</div>
-                    <button class="btn-cancel-disabled" disabled>Отменить</button>
-                </div>
-            </div>
-
-            
-            <div class="order-card">
-                <div class="order-header">
-                    <div class="order-number">Заказ № 1005</div>
-                    <div class="order-date">20 декабря 2023, 10:00</div>
-                    <div class="order-status status-ready">Готов</div>
-                </div>
-                <div class="order-info">
-                    <div class="order-items">
-                        Клавишные Roland FP-30X · 1 шт.<br>
-                        Стойка для клавиш · 1 шт.
-                    </div>
-                    <div class="order-total">72 500 ₽</div>
-                    <button class="btn-cancel-disabled" disabled>Отменить</button>
-                </div>
-            </div>
-
-            
-            <div class="order-card">
-                <div class="order-header">
-                    <div class="order-number">Заказ № 1006</div>
-                    <div class="order-date">05 декабря 2023, 13:20</div>
-                    <div class="order-status status-issued">Выдан</div>
-                </div>
-                <div class="order-info">
-                    <div class="order-items">
-                        Студийные мониторы KRK Rokit 5 · 1 пара<br>
-                        Звуковая карта Focusrite Scarlett 2i2 · 1 шт.
-                    </div>
-                    <div class="order-total">51 400 ₽</div>
-                    <button class="btn-cancel-disabled" disabled>Отменить</button>
-                </div>
-            </div>
         </div>
     </div>
 </div>
