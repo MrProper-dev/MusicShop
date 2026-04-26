@@ -37,10 +37,13 @@ public class SecurityConfig{
         return http
         .securityMatcher("/seller/**")
         .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/seller/css/log_in.css",
+                "/seller/js/log_in.js").permitAll()
             .anyRequest().hasRole("SELLER")
         )
         .formLogin(form -> form
             .loginPage("/seller/login")
+            .defaultSuccessUrl("/seller/products", true)
             .loginProcessingUrl("/seller/login")
             .usernameParameter("login")
             .permitAll()
@@ -76,12 +79,10 @@ public class SecurityConfig{
         .securityMatcher("/**")
         .authorizeHttpRequests(auth -> auth 
             .requestMatchers("/products/**", 
-                "/client/css/products_list.css", 
-                "/client/js/products_list.js", 
-                "/client/css/product_card.css",
-                "/client/js/product_card.js",
-                "/client/css/log_in.css",
-                "/client/js/log_in.js").permitAll()
+                "/signup",
+                "/api/v1/clients/signup",
+                "/client/css/**", 
+                "/client/js/**").permitAll()
             .anyRequest().hasRole("CLIENT")
         )
         .formLogin(form -> form

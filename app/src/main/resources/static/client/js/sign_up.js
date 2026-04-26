@@ -11,9 +11,9 @@ function showToast(info){
     }, 1500);
 }
 
-const profileForm = document.querySelector('.profile-form');
-profileForm.addEventListener('change', function (){
-    const phoneInput = profileForm.querySelector('input[name="phone"]');
+const registerForm = document.querySelector('.register-form');
+registerForm.addEventListener('change', function (){
+    const phoneInput = registerForm.querySelector('input[name="phone"]');
     let phone = phoneInput.value.replace(/\D/g, '');
     console.log(phone);
     if(phone.length != 11){
@@ -24,38 +24,24 @@ profileForm.addEventListener('change', function (){
         phoneInput.value = phone.replace(/(\d)(\d{3})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4 $5');
     }
 });
-profileForm.addEventListener('submit', async function(event) {
+registerForm.addEventListener('submit', async function(event){
     event.preventDefault();
-    const formData = new FormData(profileForm);
-    const newPasswordInput = profileForm.querySelector('input[name="password"]');
-    const confirmPasswordInput = profileForm.querySelector('input[name="confirmPassword"]');
-    if((formData.get('password') === '' && formData.get('confirmPassword') !== '') || (formData.get('password') !== '' && formData.get('confirmPassword') === '')){
-        showToast('Одно из полей пароля не заполнено');
-        return;
-    }
+    const formData = new FormData(registerForm);
     const jsonString = JSON.stringify(Object.fromEntries(formData));
-    const response = await fetch('/api/v1/clients', {
-        method: 'PUT',
+    const response = await fetch('/api/v1/clients/signup', {
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: jsonString
     });
-    
     if(response.ok) {
-        showToast('Профиль успешно обновлен');
-        newPasswordInput.value = '';
-        confirmPasswordInput.value = '';
-    }else if(response.status == 422) {
+        window.location.href = '/login';
+    }else if(response.status == 422){
         showToast('Такой номер телефона уже зарегистрирован');
     }else if(response.status == 400) {
         showToast('Пароли не совпадают');
     }else{
         showToast(`Ошибка сервера: ${response.status}`);
     }
-});
-
-const cancelBtn = document.querySelector('.btn-cancel');
-cancelBtn.addEventListener('click', function(event){
-    profileForm.reset();
 });

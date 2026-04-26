@@ -123,5 +123,10 @@ public class ClientController {
         model.addAttribute("basket", basket);
         return "client/basket";
     }
+
+    @GetMapping("/signup")
+    public String signup(){
+        return "client/sign_up";
+    }
     
 }

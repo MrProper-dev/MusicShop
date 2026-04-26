@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClientUpdateDto {
+public class ClientDto {
     private String fullName;
     private String phone;
-    private String newPassword;
+    private String password;
     private String confirmPassword;
 }

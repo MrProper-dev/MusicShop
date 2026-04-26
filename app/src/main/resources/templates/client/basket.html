@@ -48,15 +48,15 @@
                             <span class="product-name" th:text="${item.productName}"></span>
                         </div>
                     </td>
-                    <td th:text="${#numbers.formatDecimal(item.price, 0, 'WHITESPACE', 2, 'POINT') + ' ₽'}"></td>
+                    <td class="price" th:text="${#numbers.formatDecimal(item.price, 0, 'WHITESPACE', 2, 'POINT') + ' ₽'}"></td>
                     <td>
-                        <div class="quantity-control">
-                            <button class="quantity-btn" th:data-product-id="${item.productId}" data-action="decrement">−</button>
-                            <input type="text" class="quantity-input" th:value="${item.quantity}" th:data-product-id="${item.productId}" readonly>
-                            <button class="quantity-btn" th:data-product-id="${item.productId}" data-action="increment">+</button>
+                        <div class="quantity-control" th:data-product-id="${item.productId}">
+                            <button class="quantity-btn" data-action="decrement">−</button>
+                            <input type="text" class="quantity-input" th:value="${item.quantity}">
+                            <button class="quantity-btn" data-action="increment">+</button>
                         </div>
                     </td>
-                    <td class="item-subtotal" th:data-product-id="${item.productId}" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'WHITESPACE', 2, 'POINT') + ' ₽'}">89 900 ₽</td>
+                    <td class="item-subtotal" th:data-product-id="${item.productId}" th:text="${#numbers.formatDecimal(item.subtotal, 0, 'WHITESPACE', 2, 'POINT') + ' ₽'}"></td>
                     <td><button class="remove-btn" th:data-product-id="${item.productId}">Удалить</button></td>
                 </tr>
 
@@ -66,9 +66,10 @@
         <div class="cart-summary" th:unless="${basket == null or basket.items.isEmpty()}">
             <div></div>
             <div class="total-block">
-                <div class="total-price"><span class="total-label">Итого:</span> 134 680 ₽</div>
+                <span class="total-label">Итого:</span>
+                <span class="total-price" th:text="${#numbers.formatDecimal(basket.totalPrice, 0, 'WHITESPACE', 2, 'POINT') + ' ₽'}"></span>
             </div>
-            <button class="checkout-btn">Оформить заказ</button>
+            <button class="checkout-btn" th:data-order-id="${basket.orderId}">Оформить заказ</button>
         </div>
     </div>
 </div>

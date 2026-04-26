@@ -12,23 +12,11 @@ function showToast(info){
 }
 
 const loginForm = document.querySelector('.login-form');
-loginForm.addEventListener('change', function (){
-    const phoneInput = loginForm.querySelector('input[name="phone"]');
-    let phone = phoneInput.value.replace(/\D/g, '');
-    console.log(phone);
-    if(phone.length != 11){
-        phoneInput.value = '';
-        showToast('Номер телефона введен некорректно');
-    }else{
-        if(phone[0] == '7') phone = '8' + phone.slice(1);
-        phoneInput.value = phone.replace(/(\d)(\d{3})(\d{3})(\d{2})(\d{2})/, '$1 $2 $3 $4 $5');
-    }
-});
 loginForm.addEventListener('submit', async function(event) {
     event.preventDefault();
     const formData = new FormData(loginForm);
     const searchParams = new URLSearchParams(formData);
-    const response = await fetch('/login', {
+    const response = await fetch('/seller/login', {
         method : 'POST',
         body : searchParams
     });

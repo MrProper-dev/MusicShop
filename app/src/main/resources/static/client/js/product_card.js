@@ -16,9 +16,13 @@ const moreBtn = document.getElementById('more');
 const quantity = document.getElementById('quantity');
 
 quantity.addEventListener('input', function(event) {
-    if(quantity.value <= 0){
+    if(!/^\d+$/.test(quantity.value) || quantity.value <= 0){
         quantity.value = 1;
     }
+});
+
+quantity.addEventListener('focus', function() {
+    this.select();
 });
 
 lessBtn.addEventListener('click', function(event) {

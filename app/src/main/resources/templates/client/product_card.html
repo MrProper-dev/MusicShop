@@ -28,8 +28,8 @@
     
     <div class="breadcrumbs">
         <a href="/products">Каталог</a> <span>/</span> 
-        <a th:href="'/products?cat-id=' + ${product.category.id}">Электрогитары</a> <span>/</span> 
-        <span style="color:#5f5b54; font-weight:500;">Fender Stratocaster</span>
+        <a th:href="'/products?cat-id=' + ${product.category.id}" th:text="${product.category.name}"></a> <span>/</span> 
+        <span style="color:#5f5b54; font-weight:500;" th:text="${product.name}"></span>
     </div>
 
     

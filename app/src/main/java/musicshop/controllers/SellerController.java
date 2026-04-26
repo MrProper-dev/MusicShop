@@ -13,4 +13,9 @@ public class SellerController {
         return "seller/log_in";
     }
 
+    @GetMapping("/products")
+    public String showOrders(){
+        return "seller/orders";
+    }
+
 }

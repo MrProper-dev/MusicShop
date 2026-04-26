@@ -34,18 +34,18 @@
             <div class="form-row">
                 <div class="form-group">
                     <label>ФИО</label>
-                    <input type="text" name="fullName" th:value="${profile.fullName}" placeholder="Введите ФИО">
+                    <input type="text" name="fullName" th:value="${profile.fullName}" placeholder="Введите ФИО" required>
                 </div>
                 <div class="form-group">
                     <label>Номер телефона</label>
-                    <input type="tel" name="phone" th:value="${profile.phone}" placeholder="+7 (___) ___-__-__">
+                    <input type="tel" name="phone" th:value="${profile.phone}" placeholder="+7 (___) ___-__-__" required>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group">
                     <label>Новый пароль</label>
-                    <input type="password" name="newPassword" placeholder="Введите новый пароль">
+                    <input type="password" name="password" placeholder="Введите новый пароль">
                 </div>
                 <div class="form-group">
                     <label>Повторите пароль</label>

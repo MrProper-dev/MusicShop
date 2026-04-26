@@ -85,11 +85,12 @@ public class OrderService {
     }
 
     @Transactional
-    public boolean cancelOrder(Long orderId) {
-        int updatedRows = orderRepository.cancelOrder(
+    public boolean cancelOrder(Long clientId, Long orderId) {
+        int updatedRows = orderRepository.updateStatusByIdAndPastStatusAndClientId(
                 orderId, 
                 Order.Status.CANCELED, 
-                Order.Status.CREATED
+                Order.Status.CREATED,
+                clientId
         );
         return updatedRows > 0;
     }
@@ -99,6 +100,27 @@ public class OrderService {
         Order basket = orderRepository.findByClientIdAndStatus(clientId, Order.Status.NULL);
         productOrderRepository.findByOrderId(basket.getId());
         return orderMapper.mapToBasketDto(basket);
+    }
+
+    @Transactional
+    public void removeFromBasket(Long clientId, Long productId) {
+        Long orderId = orderRepository.findIdByClientIdAndStatus(clientId, Order.Status.NULL);
+        if(orderId == null) throw new RuntimeException();
+        
+        productOrderRepository.deleteByOrderIdAndProductId(orderId, productId);
+    }
+
+    @Transactional
+    public void updateQuantity(Long clientId, Long productId, Integer quantity) {
+        Long orderId = orderRepository.findIdByClientIdAndStatus(clientId, Order.Status.NULL);
+        if(orderId == null) throw new RuntimeException();
+        if(quantity <= 0) throw new RuntimeException();
+        productOrderRepository.updateQuantityByOrderIdAndProductId(orderId, productId, quantity);
+    }
+
+    @Transactional
+    public void checkout(Long clientId, Long orderId) {
+        orderRepository.updateStatusByIdAndPastStatusAndClientId(orderId, Order.Status.CREATED, Order.Status.NULL, clientId);
     }
 
 }
