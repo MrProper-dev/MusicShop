@@ -8,6 +8,6 @@ import musicshop.entities.Admin;
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, Long> {
 
-    public Admin findByLogin(String login);
+    Admin findByLogin(String login);
 
 }

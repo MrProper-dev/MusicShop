@@ -15,7 +15,7 @@ import musicshop.entities.Order;
 public interface OrderRepository extends JpaRepository<Order, Long>{
 
     @Query("select o from Order o left join fetch o.productOrders where o.client.id = :clientId and o.status = 'NULL'")
-    public Order findBasketByClientId(@Param("clientId") Long clientId);
+    Order findBasketByClientId(@Param("clientId") Long clientId);
 
     @EntityGraph(attributePaths = "productOrders.product")
     List<Order> findByClientIdAndStatusNotOrderByTimestampDesc(Long clientId, Order.Status status);
@@ -35,5 +35,14 @@ public interface OrderRepository extends JpaRepository<Order, Long>{
 
     @Query("SELECT o.id FROM Order o WHERE o.client.id = :clientId AND o.status = :status")
     Long findIdByClientIdAndStatus(@Param("clientId") Long clientId, @Param("status") Order.Status status);
+
+    @EntityGraph(attributePaths = {"productOrders.product", "client"})
+    List<Order> findWithClientAndProductOrdersAndProductByStatusInOrderByTimestampDesc(List<Order.Status> statuses);
+    
+    @Modifying
+    @Query("UPDATE Order o SET o.status = :newStatus WHERE o.id = :orderId AND o.status = :expectedStatus")
+    int updateStatusByIdAndPastStatus(@Param("orderId") Long orderId, 
+                          @Param("newStatus") Order.Status newStatus, 
+                          @Param("expectedStatus") Order.Status expectedStatus);
 
 }

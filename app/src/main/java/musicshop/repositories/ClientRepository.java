@@ -8,6 +8,6 @@ import musicshop.entities.Client;
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
 
-    public Client findByPhone(String phone);
+    Client findByPhone(String phone);
 
 }

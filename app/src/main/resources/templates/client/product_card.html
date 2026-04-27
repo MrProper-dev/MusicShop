@@ -34,18 +34,18 @@
 
     
     <div class="top-action-bar">
-        <button onclick="history.back()" class="btn-back">← Назад к каталогу</button>
+        <button onclick="history.back()" class="btn-back">← Назад</button>
     </div>
 
     
     <div class="product-detail">
         <div class="product-image-block">
             <div class="main-image">
-                <img class="cross-img" th:src="'/pictures/' + ${mainPicture}" th:alt="${product.name}">
+                <img class="cross-img" th:src="'/pictures/' + ${mainPicture.path}" th:alt="${product.name}">
             </div>
             <div class="thumbnail-list">
                 <div th:each="img : ${product.pictures}" class="thumbnail">
-                    <img class="thumb-img" th:src="'/pictures/' + ${img}">
+                    <img class="thumb-img" th:src="'/pictures/' + ${img.path}">
                 </div>
             </div>
         </div>
@@ -54,7 +54,7 @@
         <div class="product-info-block">
             <h1 class="product-title" th:text="${product.name}"></h1>
             <div class="product-category" th:text="'📁 ' + ${product.category.name}"></div>
-            <div class="product-price" th:text="${product.price} + ' ₽'"></div>
+            <div class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'WHITESPACE', 2, 'POINT') + ' ₽'}"></div>
 
             <div class="stock-status">
                 <div th:if="${product.quantity} > 0" class="status-have">✓ В наличии</div>

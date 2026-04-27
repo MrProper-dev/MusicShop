@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import musicshop.dto.BasketDto;
 import musicshop.dto.OrderPreviewForClientDto;
 import musicshop.dto.OrderPreviewForClientDto.OrderProductDto;
+import musicshop.dto.OrderPreviewForSellerDto;
 import musicshop.entities.Order;
 import musicshop.entities.Picture;
 import musicshop.entities.ProductOrder;
@@ -48,6 +49,39 @@ public class OrderMapper {
                 .sum();
         
         return new BasketDto(order.getId(), items, totalPrice.floatValue());
+    }
+
+    public OrderPreviewForSellerDto mapToOrderPreviewForSellerDto(Order order) {
+        if (order == null) return null;
+        
+        OrderPreviewForSellerDto dto = new OrderPreviewForSellerDto();
+        dto.setId(order.getId());
+        dto.setTimestamp(order.getTimestamp());
+        dto.setStatus(order.getStatus().name());
+        dto.setClientName(order.getClient().getFullName());
+        dto.setClientPhone(order.getClient().getPhone());
+        
+        List<OrderPreviewForSellerDto.ProductDto> products = order.getProductOrders().stream()
+                .map(this::mapToOrderPreviewForSellerDtoProductDto)
+                .collect(Collectors.toList());
+        dto.setProducts(products);
+        
+        double totalPrice = products.stream()
+                .mapToDouble(OrderPreviewForSellerDto.ProductDto::getSubtotal)
+                .sum();
+        dto.setTotalPrice((float) totalPrice);
+        
+        return dto;
+    }
+
+    private OrderPreviewForSellerDto.ProductDto mapToOrderPreviewForSellerDtoProductDto(ProductOrder productOrder) {
+        OrderPreviewForSellerDto.ProductDto dto = new OrderPreviewForSellerDto.ProductDto();
+        dto.setProductId(productOrder.getProduct().getId());
+        dto.setProductName(productOrder.getProduct().getName());
+        dto.setQuantity(productOrder.getQuantity());
+        dto.setPrice(productOrder.getProduct().getPrice());
+        dto.setSubtotal(dto.getPrice() * dto.getQuantity());
+        return dto;
     }
     
     private BasketDto.BasketItemDto mapToBasketItemDto(ProductOrder productOrder) {

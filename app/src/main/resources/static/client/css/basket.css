@@ -135,6 +135,7 @@ body {
 }
 
 .product-name {
+    text-decoration: none;
     font-weight: 600;
     font-size: 16px;
     color: #2b2a27;

@@ -40,7 +40,7 @@
         
         <aside class="filters-panel">
             <h3>Фильтры</h3>
-            <form id="filterForm" action="#" method="get">
+            <form id="filterForm" action="" method="get">
                 <div class="filter-group">
                     <h4>Категория</h4>
                     <label th:each="cat : ${categories}" class="filter-option"><input type="checkbox" name="cat-id" th:value="${cat.id}" th:text="${cat.name}"></label>

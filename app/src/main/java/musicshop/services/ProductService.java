@@ -1,6 +1,5 @@
 package musicshop.services;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +8,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import musicshop.dto.CategoryFullDto;
-import musicshop.dto.PictureFullDto;
 import musicshop.dto.ProductFullDto;
 import musicshop.dto.ProductPreviewForClientDto;
-import musicshop.entities.Category;
-import musicshop.entities.Picture;
-import musicshop.entities.Product;
+import musicshop.mappers.ProductMapper;
 import musicshop.repositories.ProductRepository;
 
 @Service
@@ -25,6 +20,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private ProductMapper productMapper;
 
     public Page<ProductPreviewForClientDto> getCatalogPageForClient(Integer page, List<Integer> categoryIds, Integer priceFrom, Integer priceTo, String search){
         Pageable pageable = PageRequest.of(page == null ? 0 : page < 0 ? 0 : page  , CLIENT_CATALOG_PAGE_SIZE);
@@ -44,25 +42,9 @@ public class ProductService {
     }
 
     public ProductFullDto getFullDataById(Long id){
-        return map(productRepository.findByIdWithFullData(id));
+        return productMapper.mapToProductFullDto(productRepository.findByIdWithFullData(id));
     }
 
-    private ProductFullDto map(Product product) {
-        Category category = product.getCategory();
-        List<Picture> pictures = product.getPictures();
-        ProductFullDto dto = new ProductFullDto();
-        dto.setId(product.getId());
-        dto.setCategory(new CategoryFullDto(category.getId(), category.getName()));
-        dto.setName(product.getName());
-        dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
-        dto.setQuantity(product.getQuantity());
-        List<PictureFullDto> pictureDtos = new ArrayList<>();
-        pictures.forEach(pic -> {
-            pictureDtos.add(new PictureFullDto(pic.getId(), pic.getPath(), pic.getIsMain()));
-        });
-        dto.setPictures(pictureDtos);
-        return dto;
-    }
+    
 
 }

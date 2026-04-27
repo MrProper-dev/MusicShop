@@ -16,7 +16,7 @@ import musicshop.entities.keys.ProductOrderId;
 public interface ProductOrderRepository extends JpaRepository<ProductOrder, ProductOrderId>{
 
     @EntityGraph(attributePaths = "product.pictures")
-    List<ProductOrder> findByOrderId(Long orderId);
+    List<ProductOrder> findWithProductAndPicturesByOrderId(Long orderId);
 
     @Modifying
     @Query("DELETE FROM ProductOrder po WHERE po.order.id = :orderId AND po.product.id = :productId")
@@ -25,5 +25,8 @@ public interface ProductOrderRepository extends JpaRepository<ProductOrder, Prod
     @Modifying
     @Query("UPDATE ProductOrder po SET po.quantity = :quantity WHERE po.order.id = :orderId AND po.product.id = :productId")
     int updateQuantityByOrderIdAndProductId(@Param("orderId") Long orderId, @Param("productId") Long productId, @Param("quantity") Integer quantity);
+
+    @EntityGraph(attributePaths = "product")
+    List<ProductOrder> findWithProductByOrderId(Long orderId);
 
 }

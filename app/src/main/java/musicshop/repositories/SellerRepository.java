@@ -8,6 +8,6 @@ import musicshop.entities.Seller;
 @Repository
 public interface SellerRepository extends JpaRepository<Seller, Long> {
 
-    public Seller findByLogin(String login);
+    Seller findByLogin(String login);
 
 }

@@ -11,10 +11,12 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import musicshop.dto.BasketDto;
 import musicshop.dto.OrderPreviewForClientDto;
+import musicshop.dto.OrderPreviewForSellerDto;
 import musicshop.entities.Client;
 import musicshop.entities.Order;
 import musicshop.entities.Product;
 import musicshop.entities.ProductOrder;
+import musicshop.entities.Seller;
 import musicshop.entities.keys.ProductOrderId;
 import musicshop.mappers.OrderMapper;
 import musicshop.repositories.OrderRepository;
@@ -98,7 +100,7 @@ public class OrderService {
     @Transactional
     public BasketDto getBasket(Long clientId) {
         Order basket = orderRepository.findByClientIdAndStatus(clientId, Order.Status.NULL);
-        productOrderRepository.findByOrderId(basket.getId());
+        productOrderRepository.findWithProductAndPicturesByOrderId(basket.getId());
         return orderMapper.mapToBasketDto(basket);
     }
 
@@ -119,8 +121,58 @@ public class OrderService {
     }
 
     @Transactional
-    public void checkout(Long clientId, Long orderId) {
-        orderRepository.updateStatusByIdAndPastStatusAndClientId(orderId, Order.Status.CREATED, Order.Status.NULL, clientId);
+    public List<Long> checkout(Long clientId, Long orderId) {
+        List<ProductOrder> productOrders = productOrderRepository.findWithProductByOrderId(orderId);
+        List<Long> productIds = new ArrayList<>();
+        for(ProductOrder po : productOrders){
+            if(po.getQuantity() > po.getProduct().getQuantity())
+                productIds.add(po.getProduct().getId());
+        }
+        if(!productIds.isEmpty()) return productIds;
+        for(ProductOrder po : productOrders){
+            po.getProduct().setQuantity(po.getProduct().getQuantity() - po.getQuantity());
+        }
+        if(orderRepository.updateStatusByIdAndPastStatusAndClientId(orderId, Order.Status.CREATED, Order.Status.NULL, clientId) == 0){
+            throw new RuntimeException("AIL");
+        }
+        return productIds;
+    }
+
+    public List<OrderPreviewForSellerDto> getOrders(String statusFilter) {
+        List<Order> orders;
+        
+        if (statusFilter == null || statusFilter.isEmpty() || "ALL".equals(statusFilter)) {
+            orders = orderRepository.findWithClientAndProductOrdersAndProductByStatusInOrderByTimestampDesc(List.of(Order.Status.CREATED, Order.Status.READY));
+        } else {
+            try {
+                Order.Status status = Order.Status.valueOf(statusFilter);
+                orders = orderRepository.findWithClientAndProductOrdersAndProductByStatusInOrderByTimestampDesc(List.of(status));
+            } catch (IllegalArgumentException e) {
+                orders = orderRepository.findWithClientAndProductOrdersAndProductByStatusInOrderByTimestampDesc(List.of(Order.Status.CREATED, Order.Status.READY));
+            }
+        }
+        
+        return orders.stream()
+                .map(orderMapper::mapToOrderPreviewForSellerDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void collectOrder(Long orderId, Seller seller) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+        if (order.getStatus() != Order.Status.CREATED) {
+            throw new RuntimeException("Order have to be with status 'CREATED'");
+        }
+        order.setStatus(Order.Status.READY);
+        order.setSeller(seller);
+    }
+
+    @Transactional
+    public void issueOrder(Long orderId) {
+        int updated = orderRepository.updateStatusByIdAndPastStatus(orderId, Order.Status.ISSUED, Order.Status.READY);
+        if (updated == 0) {
+            throw new RuntimeException("MBR");
+        }
     }
 
 }

@@ -4,358 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MusicStore | Карточка товара (Продавец)</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
-            background-color: #f2efe7;
-            padding: 32px 40px;
-            color: #2c2b28;
-        }
-
-        .app-container {
-            max-width: 1440px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 28px;
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.02);
-            overflow: hidden;
-        }
-
-        .main-header {
-            padding: 20px 32px;
-            background-color: #fefaf5;
-            border-bottom: 1px solid #eae4db;
-        }
-
-        .header-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .logo-emojy {
-            font-size: 48px;
-            line-height: 1;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
-        }
-
-        .store-title {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            color: #3b3a36;
-        }
-
-        .role-badge {
-            background-color: #3b3a36;
-            color: white;
-            padding: 5px 14px;
-            border-radius: 40px;
-            font-size: 12px;
-            font-weight: 600;
-            margin-left: 12px;
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 32px;
-            align-items: center;
-        }
-
-        .nav-menu a {
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            color: #4a4843;
-            padding-bottom: 4px;
-            transition: color 0.2s;
-        }
-
-        .nav-menu a.active-nav {
-            color: #2b2a27;
-            font-weight: 700;
-            border-bottom: 3px solid #b9b0a2;
-        }
-
-        .breadcrumb-block {
-            padding: 24px 32px 0 32px;
-            font-size: 14px;
-            color: #9b9288;
-        }
-
-        .breadcrumb-block a {
-            color: #5f5b54;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .breadcrumb-block span {
-            margin: 0 6px;
-            color: #cfc6bc;
-        }
-
-        .action-top {
-            padding: 16px 32px 0 32px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-        }
-
-        .btn-back-link {
-            background-color: #f4f0ea;
-            color: #4a4843;
-            border: 1px solid #e0d6cc;
-            padding: 9px 26px;
-            border-radius: 40px;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-
-        .btn-back-link:hover {
-            background-color: #e9e1d8;
-            border-color: #cfc3b7;
-        }
-
-        .product-core {
-            padding: 24px 32px 40px 32px;
-            display: flex;
-            gap: 48px;
-            flex-wrap: wrap;
-        }
-
-        .gallery-area {
-            flex: 1;
-            min-width: 300px;
-        }
-
-        .primary-image {
-            background-color: #f6f2ec;
-            border-radius: 28px;
-            border: 1px solid #e9dfd6;
-            height: 420px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .cross-img-main {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .thumb-row {
-            display: flex;
-            gap: 14px;
-            margin-top: 20px;
-            flex-wrap: wrap;
-        }
-
-        .thumb-item {
-            width: 88px;
-            height: 88px;
-            background-color: #f9f5ef;
-            border: 1px solid #e2d8cf;
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .thumb-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .info-area {
-            flex: 1;
-            min-width: 340px;
-        }
-
-        .product-headline {
-            font-size: 32px;
-            font-weight: 800;
-            color: #2b2a27;
-            margin-bottom: 16px;
-            letter-spacing: -0.3px;
-        }
-
-        .category-tag {
-            display: inline-block;
-            background-color: #f0ebe4;
-            padding: 6px 18px;
-            border-radius: 40px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #5f5b54;
-            margin-bottom: 20px;
-        }
-
-        .price-tag {
-            font-size: 38px;
-            font-weight: 800;
-            color: #2e2c28;
-            margin-bottom: 20px;
-        }
-
-        .stock-row {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            margin-bottom: 28px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #efe6de;
-        }
-
-        .stock-badge {
-            background-color: #e6f0e8;
-            color: #2f6b47;
-            padding: 6px 16px;
-            border-radius: 40px;
-            font-weight: 700;
-            font-size: 14px;
-            border: 1px solid #cde0d4;
-        }
-
-        .stock-amount {
-            font-size: 14px;
-            color: #6e685f;
-            font-weight: 500;
-        }
-
-        .desc-section {
-            margin-bottom: 32px;
-        }
-
-        .desc-section h4 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #3b3a36;
-        }
-
-        .desc-section p {
-            line-height: 1.55;
-            color: #52504b;
-            font-size: 15px;
-        }
-
-        .add-to-purchase {
-            margin-top: 16px;
-            padding-top: 24px;
-            border-top: 1px solid #efe6de;
-        }
-
-        .add-to-purchase h4 {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 18px;
-            color: #3b3a36;
-        }
-
-        .purchase-row {
-            display: flex;
-            gap: 20px;
-            align-items: flex-end;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .purchase-field {
-            flex: 2;
-            min-width: 220px;
-        }
-
-        .purchase-field label {
-            display: block;
-            font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 8px;
-            color: #5f5b54;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-
-        .purchase-select {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #e0d6cc;
-            border-radius: 20px;
-            font-size: 14px;
-            font-family: inherit;
-            background-color: #fefcf9;
-            color: #2e2c28;
-            cursor: pointer;
-        }
-
-        .quantity-field {
-            flex: 1;
-            min-width: 130px;
-        }
-
-        .quantity-field label {
-            display: block;
-            font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 8px;
-            color: #5f5b54;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-
-        .quantity-input {
-            width: 100%;
-            padding: 14px 16px;
-            border: 1px solid #e0d6cc;
-            border-radius: 20px;
-            font-size: 15px;
-            font-family: inherit;
-            background-color: #fefcf9;
-            color: #2e2c28;
-        }
-
-        .btn-add-to-purchase {
-            background-color: #3b3a36;
-            color: white;
-            border: none;
-            padding: 14px 28px;
-            border-radius: 56px;
-            font-weight: 700;
-            font-size: 15px;
-            cursor: pointer;
-            width: 100%;
-            transition: background 0.2s;
-        }
-
-        .btn-add-to-purchase:hover {
-            background-color: #54524c;
-        }
-    </style>
+    <link rel="stylesheet" href="/seller/css/product_card.css">
+    <script src="/seller/js/product_card.js" defer></script>
 </head>
 <body>
 <div class="app-container">
@@ -366,89 +16,77 @@
                 <div class="store-title">MuseLand<span class="role-badge">Продавец</span></div>
             </div>
             <div class="nav-menu">
-                <a href="#">Каталог</a>
-                <a href="#">Заказы</a>
-                <a href="#">Покупки</a>
-                <a href="#">Выйти</a>
+                <a href="/seller/products">Каталог</a>
+                <a href="/seller/orders">Заказы</a>
+                <a href="/seller/purchases">Покупки</a>
+                <a href="/logout">Выйти</a>
             </div>
         </div>
     </div>
 
     <div class="breadcrumb-block">
-        <a href="#">Каталог</a> <span>/</span> 
-        <a href="#">Электрогитары</a> <span>/</span> 
-        <span style="color:#5f5b54; font-weight:500;">Fender Stratocaster</span>
+        <a href="/seller/products">Каталог</a> <span>/</span> 
+        <a th:href="'/seller/products?cat-id=' + ${product.category.id}" th:text="${product.category.name}"></a> <span>/</span> 
+        <span style="color:#5f5b54; font-weight:500;" th:text="${product.name}"></span>
     </div>
 
     <div class="action-top">
-        <a href="#" class="btn-back-link">← Назад к каталогу</a>
+        <button onclick="history.back()" class="btn-back-link">← Назад</button>
     </div>
 
     <div class="product-core">
         <div class="gallery-area">
             <div class="primary-image">
-                <img class="cross-img-main" src="C:\Users\Admin\Downloads\cat.jpg" alt="Fender Stratocaster">
+                <img class="cross-img" th:src="'/pictures/' + ${mainPicture.path}" th:alt="${product.name}">
             </div>
             <div class="thumb-row">
-                <div class="thumb-item">
-                    <img class="thumb-img" src="C:\Users\Admin\Downloads\cat.jpg" alt="thumb 1">
-                </div>
-                <div class="thumb-item">
-                    <img class="thumb-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23dccfb9'/%3E%3Cline x1='28' y1='28' x2='72' y2='72' stroke='%2384715b' stroke-width='7' stroke-linecap='round'/%3E%3Cline x1='72' y1='28' x2='28' y2='72' stroke='%2384715b' stroke-width='7' stroke-linecap='round'/%3E%3C/svg%3E" alt="thumb 2">
-                </div>
-                <div class="thumb-item">
-                    <img class="thumb-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23cfbea4'/%3E%3Cline x1='20' y1='20' x2='80' y2='80' stroke='%23907c64' stroke-width='6' stroke-linecap='round'/%3E%3Cline x1='80' y1='20' x2='20' y2='80' stroke='%23907c64' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E" alt="thumb 3">
-                </div>
-                <div class="thumb-item">
-                    <img class="thumb-img" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23e7dbc9'/%3E%3Cline x1='30' y1='30' x2='70' y2='70' stroke='%23806b53' stroke-width='8' stroke-linecap='round'/%3E%3Cline x1='70' y1='30' x2='30' y2='70' stroke='%23806b53' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E" alt="thumb 4">
+                <div th:each="img : ${product.pictures}" class="thumb-item">
+                    <img class="thumb-img" th:src="'/pictures/' + ${img.path}">
                 </div>
             </div>
         </div>
 
         <div class="info-area">
-            <h1 class="product-headline">Электрогитара Fender Stratocaster</h1>
-            <div class="category-tag">Электрогитары</div>
-            <div class="price-tag">89 900 ₽</div>
+            <h1 class="product-headline" th:text="${product.name}"></h1>
+            <div class="category-tag" th:text="'📁 ' + ${product.category.name}"></div>
+            <div class="price-tag" th:text="${#numbers.formatDecimal(product.price, 0, 'WHITESPACE', 2, 'POINT') + ' ₽'}"></div>
 
             <div class="stock-row">
-                <div class="stock-badge">В наличии</div>
-                <span class="stock-amount">Осталось 7 шт.</span>
+                <div th:if="${product.quantity} > 0" class="stock-badge">✓ В наличии</div>
+                <div th:if="${product.quantity} <= 0" class="stock-badge-not-have">X Нет в наличии</div>
+                <span class="stock-amount" th:text="'Осталось ' + ${product.quantity} + ' шт.'"></span>
             </div>
 
             <div class="desc-section">
                 <h4>Описание</h4>
-                <p>
-                    Культовая электрогитара Fender Stratocaster с классическим звучанием. 
-                    Корпус из ольхи, гриф из клена, 21 лад. Идеально подходит для рока, блюза и поп-музыки. 
-                    В комплекте: чехол, ремень, набор струн.
-                </p>
+                <p th:text="${product.description}"></p>
             </div>
 
             <div class="add-to-purchase">
                 <h4>Добавить в покупку</h4>
                 
-                <div class="purchase-row">
-                    <div class="purchase-field">
-                        <label>Выберите покупку</label>
-                        <select class="purchase-select" name="purchase_id">
-                            <option value="">-- Выберите покупку --</option>
-                            <option value="1">Покупка №1 (Продавец: Иванов И.И.)</option>
-                            <option value="2">Покупка №2 (Продавец: Петров П.П.)</option>
-                            <option value="3">Покупка №3 (Продавец: Сидорова А.С.)</option>
-                            <option value="new">+ Создать новую покупку</option>
-                        </select>
+                <form id="addToPurchaseForm" th:data-product-id="${product.id}">
+                    <div class="purchase-row">
+                        <div class="purchase-field">
+                            <label>Выберите покупку</label>
+                            <select class="purchase-select" name="purchase_id">
+                                <option th:each="id, iter : ${purchasesIds}" th:value="${id}" th:text="'Покупка №' + ${iter.count}"></option>
+                            </select>
+                        </div>
+                        
+                        <div class="quantity-field">
+                            <label>Количество</label>
+                            <input type="number" class="quantity-input" name="quantity" value="1" min="1">
+                        </div>
                     </div>
                     
-                    <div class="quantity-field">
-                        <label>Количество</label>
-                        <input type="number" class="quantity-input" name="quantity" value="1" min="1" max="7">
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn-add-to-purchase" form="addToPurchaseForm">Добавить в выбранную покупку</button>
+                    <button type="submit" class="btn-add-to-purchase">Добавить в выбранную покупку</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
+<div class="toast-message"></div>
 </body>
 </html>

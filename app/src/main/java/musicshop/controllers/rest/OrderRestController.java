@@ -1,9 +1,11 @@
 package musicshop.controllers.rest;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import musicshop.entities.Client;
+import musicshop.entities.Seller;
 import musicshop.services.OrderService;
 @RestController
 @RequestMapping("/api/v1/orders")
@@ -63,11 +66,38 @@ public class OrderRestController {
 
     @PostMapping("/{id}/checkout")
     @ResponseBody
-    public void checkout(
+    public List<Long> checkout(
             @AuthenticationPrincipal UserDetails userDetails,
             @PathVariable("id") Long orderId) {
         Client client = (Client) userDetails;
-        orderService.checkout(client.getId(), orderId);
+        try{
+            List<Long> productId = orderService.checkout(client.getId(), orderId);
+            return productId;
+        }catch (RuntimeException exception){
+            if(exception.getMessage().equals("AIL"))
+            throw new ResponseStatusException(HttpStatusCode.valueOf(403));
+            else throw exception;
+        }
+    }
+
+    @PatchMapping("/{id}/collect")
+    public void collectOrder(
+            @PathVariable("id") Long orderId,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        Seller seller = (Seller) userDetails;
+        orderService.collectOrder(orderId, seller);
+    }
+
+    @PatchMapping("/{id}/issue")
+    public void issueOrder(@PathVariable("id") Long orderId) {
+        try{
+            orderService.issueOrder(orderId);
+        }catch (RuntimeException exception){
+            if(exception.getMessage().equals("MBR"))
+                throw new ResponseStatusException(HttpStatusCode.valueOf(409));
+            else
+                throw exception;
+        }
     }
 
 }

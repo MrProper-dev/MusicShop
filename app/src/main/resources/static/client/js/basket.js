@@ -88,6 +88,7 @@ document.querySelectorAll('.remove-btn').forEach(removeBtn => {
     });
 });
 
+const trs = document.querySelectorAll('.product-row');
 document.querySelector('.checkout-btn').addEventListener('click', async function(){
     const orderId = this.dataset.orderId;
     const cartContent = document.querySelector('.cart-content');
@@ -95,8 +96,18 @@ document.querySelector('.checkout-btn').addEventListener('click', async function
         method : 'POST'
     });
     if(response.ok){
-        cartContent.innerHTML = '<h1 class="page-title">Корзина</h1>';
-        showToast('Заказ оформлен');
+        const data = await response.json();
+        if(data.length !== 0){
+            trs.forEach(tr => {
+                if(data.includes(parseInt(tr.dataset.productId))){
+                    tr.style.backgroundColor = '#f8d7d4';
+                }
+            });
+            showToast('Выделенные товары не могут быть добавлены в заказ, проверьте их наличие');
+        }else{
+            cartContent.innerHTML = '<h1 class="page-title">Корзина</h1>';
+            showToast('Заказ оформлен');
+        }
     }else{
         showToast(`Ошибка сервера: ${response.status}`);
     }

@@ -39,13 +39,13 @@
             </thead>
             <tbody>
 
-                <tr th:each="item : ${basket.items}">
+                <tr th:each="item : ${basket.items}" th:data-product-id="${item.productId}" class="product-row">
                     <td>
                         <div class="product-cell">
                             <div class="product-thumb">
                                 <img class="thumb-img" th:src="${item.imagePath}" th:alt="${item.productName}">
                             </div>
-                            <span class="product-name" th:text="${item.productName}"></span>
+                            <a class="product-name" th:href="'/products/' + ${item.productId}" th:text="${item.productName}"></a>
                         </div>
                     </td>
                     <td class="price" th:text="${#numbers.formatDecimal(item.price, 0, 'WHITESPACE', 2, 'POINT') + ' ₽'}"></td>
