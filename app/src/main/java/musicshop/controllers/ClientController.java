@@ -19,7 +19,7 @@ import musicshop.dto.BasketDto;
 import musicshop.dto.OrderPreviewForClientDto;
 import musicshop.dto.PictureFullDto;
 import musicshop.dto.ProductFullDto;
-import musicshop.dto.ProductPreviewForClientDto;
+import musicshop.dto.ProductPreviewDto;
 import musicshop.entities.Category;
 import musicshop.entities.Client;
 import musicshop.services.CategoryService;
@@ -54,7 +54,7 @@ public class ClientController {
             @RequestParam(name = "price_to", required = false) Integer priceTo,
             @RequestParam(name = "search", required = false) String search){
         List<Category> categories = categoryService.getAllCategories();
-        Page<ProductPreviewForClientDto> productsPage = productService.getCatalogPageForClient(page, categoryIds, priceFrom, priceTo, search);
+        Page<ProductPreviewDto> productsPage = productService.getCatalogPage(page, categoryIds, priceFrom, priceTo, search);
 
         model.addAttribute("categories", categories);
         model.addAttribute("products", productsPage.toList());

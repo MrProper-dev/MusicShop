@@ -59,10 +59,13 @@ public class SecurityConfig{
         return http
         .securityMatcher("/admin/**")
         .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/admin/css/log_in.css", 
+            "/admin/js/log_in.js").permitAll()
             .anyRequest().hasRole("ADMIN")
         )
         .formLogin(form -> form
             .loginPage("/admin/login")
+            .defaultSuccessUrl("/admin/products", true)
             .loginProcessingUrl("/admin/login")
             .usernameParameter("login")
             .permitAll()
@@ -83,6 +86,7 @@ public class SecurityConfig{
                 "/api/v1/clients/signup",
                 "/client/css/**", 
                 "/client/js/**").permitAll()
+            .requestMatchers("/api/v1/products/**", "/api/v1/categories/**").hasAnyRole("ADMIN")
             .requestMatchers("/api/v1/purchases/**").hasAnyRole("SELLER")
             .requestMatchers("/pictures/**", "/api/v1/orders/**").hasAnyRole("CLIENT", "SELLER", "ADMIN")
             .anyRequest().hasRole("CLIENT")

@@ -18,4 +18,10 @@ public class CategoryService {
         return categoryRepository.findAll();
     }
 
+    public void deleteCategoryById(Long categoryId){
+        Category category = new Category();
+        category.setId(categoryId);
+        categoryRepository.delete(category);
+    }
+
 }

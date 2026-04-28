@@ -19,7 +19,8 @@ import musicshop.controllers.util.PaginationForThymeleaf;
 import musicshop.dto.OrderPreviewForSellerDto;
 import musicshop.dto.PictureFullDto;
 import musicshop.dto.ProductFullDto;
-import musicshop.dto.ProductPreviewForClientDto;
+import musicshop.dto.ProductPreviewDto;
+import musicshop.dto.PurchaseForSellerDto;
 import musicshop.entities.Seller;
 import musicshop.services.CategoryService;
 import musicshop.services.OrderService;
@@ -58,7 +59,7 @@ public class SellerController {
             @RequestParam(name = "price_to", required = false) Integer priceTo,
             @RequestParam(name = "search", required = false) String search){
         List<musicshop.entities.Category> categories = categoryService.getAllCategories();
-        Page<ProductPreviewForClientDto> productsPage = productService.getCatalogPageForClient(page, categoryIds, priceFrom, priceTo, search);
+        Page<ProductPreviewDto> productsPage = productService.getCatalogPage(page, categoryIds, priceFrom, priceTo, search);
 
         model.addAttribute("categories", categories);
         model.addAttribute("products", productsPage.toList());
@@ -111,6 +112,17 @@ public class SellerController {
         model.addAttribute("orders", orders);
         model.addAttribute("currentStatus", status != null ? status : "ALL");
         return "seller/orders";
+    }
+
+    @GetMapping("/purchases")
+    public String showPurchases(
+            @AuthenticationPrincipal UserDetails userDetails,
+            Model model) {
+        Seller seller = (Seller) userDetails;
+        List<PurchaseForSellerDto> purchases = purchaseService.getActivePurchases(seller.getId());
+        
+        model.addAttribute("purchases", purchases);
+        return "seller/purchases";
     }
 
 }
