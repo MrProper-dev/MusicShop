@@ -55,8 +55,8 @@ public class SellerController {
     public String showProducts(Model model, 
             @RequestParam(name = "page", required = false) Integer page, 
             @RequestParam(name = "cat-id", required = false) List<Integer> categoryIds,
-            @RequestParam(name = "price_from", required = false) Integer priceFrom,
-            @RequestParam(name = "price_to", required = false) Integer priceTo,
+            @RequestParam(name = "price_from", required = false) Float priceFrom,
+            @RequestParam(name = "price_to", required = false) Float priceTo,
             @RequestParam(name = "search", required = false) String search){
         List<musicshop.entities.Category> categories = categoryService.getAllCategories();
         Page<ProductPreviewDto> productsPage = productService.getCatalogPage(page, categoryIds, priceFrom, priceTo, search);

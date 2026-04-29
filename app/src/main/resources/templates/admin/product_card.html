@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicStore | Карточка товара (Администратор)</title>
+    <link rel="stylesheet" href="/admin/css/product_card.css">
+    <script src="/admin/js/product_card.js" defer></script>
+</head>
+<body>
+<div class="app-container">
+    <div class="main-header">
+        <div class="header-row">
+            <div class="brand">
+                <div class="logo-emojy">🎸</div>
+                <div class="store-title">MuseLand<span class="role-badge">Администратор</span></div>
+            </div>
+            <div class="nav-menu">
+                <a href="/admin/products">Каталог</a>
+                <a href="/admin/sellers">Продавцы</a>
+                <a href="/admin/clients">Клиенты</a>
+                <a href="/admin/orders">Заказы</a>
+                <a href="/admin/purchases">Покупки</a>
+                <a href="/admin/deliveries">Поставки</a>
+                <a href="/logout">Выйти</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="breadcrumb-block">
+        <a href="/admin/products">Каталог</a> <span>/</span> 
+        <a th:if="${product.category != null}" th:href="'/admin/products?cat-id=' + ${product.category.id}" th:text="${product.category.name}"></a> <span th:if="${product.category != null}">/</span> 
+        <span style="color:#5f5b54; font-weight:500;" th:text="${product.name}"></span>
+    </div>
+
+    <div class="action-top">
+        <button onclick="history.back()" class="btn-back-link">← Назад</button>
+    </div>
+
+    <div class="product-core">
+        <div class="gallery-area">
+            <div class="primary-image">
+                <img th:if="${mainPicture != null}" class="cross-img-main" th:src="'/pictures/' + ${mainPicture.path}" th:alt="${product.name}">
+            </div>
+            <div class="thumb-row">
+                <div th:each="img : ${product.pictures}" class="thumb-item">
+                    <img class="thumb-img" th:src="'/pictures/' + ${img.path}">
+                </div>
+                <div class="thumb-item">
+                    <label class="upload-label">
+                        <input type="file" name="picture" style="display: none;" class="input-img">
+                        <img class="img-cross" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f9f5ef'/%3E%3Cline x1='50' y1='30' x2='50' y2='70' stroke='%238c7a67' stroke-width='6' stroke-linecap='round'/%3E%3Cline x1='30' y1='50' x2='70' y2='50' stroke='%238c7a67' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-area">
+            <form id="productEditForm" th:data-product-id="${product.id}"></form>
+            <div class="edit-field">
+                <label>Название товара</label>
+                <input form="productEditForm" type="text" name="product_name" th:value="${product.name}">
+            </div>
+
+            <div class="edit-field">
+                <label>Категория</label>
+                <select form="productEditForm" class="product-category-select" name="category">
+                    <option th:if="${product.category != null}" th:value="${product.category.id}" th:text="${product.category.name}" selected>Электрогитары</option>
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                </select>
+            </div>
+
+            <div class="edit-field">
+                <label>Цена (₽)</label>
+                <input form="productEditForm" type="number" name="price" th:value="${product.price}" min="0">
+            </div>
+
+            <div class="edit-field">
+                <label>Количество на складе (шт.)</label>
+                <input form="productEditForm" type="number" name="quantity" th:value="${product.quantity}" min="0">
+            </div>
+
+            <div class="edit-field">
+                <label>Описание</label>
+                <textarea form="productEditForm" name="description" th:text="${product.description}"></textarea>
+            </div>
+
+            <div class="add-to-supply">
+                <h4>Добавить в поставку</h4>
+                <div class="supply-row">
+                    <div class="quantity-field">
+                        <label>Количество</label>
+                        <input type="number" class="quantity-input" name="supply_qty" value="1" min="1">
+                    </div>
+                    <button type="button" class="btn-add-to-supply">Добавить в поставку</button>
+                </div>
+            </div>
+
+            <div class="save-actions">
+                <button type="submit" class="btn-save" form="productEditForm">Сохранить изменения</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<dialog id="modal" class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-body">
+            <p id="modalText"></p>
+            <input type="text" id="modalInput" class="modal-input">
+        </div>
+        <div class="modal-buttons">
+            <button id="modalCancel" class="modal-button">Назад</button>
+            <button id="modalOk" class="modal-button">Верно</button>
+        </div>
+    </div>
+</dialog>
+
+<div class="toast-message"></div>
+</body>
+</html>

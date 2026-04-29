@@ -558,3 +558,36 @@ body {
 #modalOk:active {
     transform: translateY(0);
 }
+
+.modal-input {
+    display: none;
+    width: 100%;
+    padding: 14px 16px;
+    margin-top: 20px;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #2c2b28;
+    background-color: #f8f7f5;
+    border: 1.5px solid #e0d6cc;
+    border-radius: 16px;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.modal-input:focus {
+    border-color: #3b3a36;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(59, 58, 54, 0.1);
+}
+
+.modal-input::placeholder {
+    color: #b0a89e;
+    font-weight: 400;
+}
+
+.modal-input:hover:not(:focus) {
+    border-color: #cfc3b7;
+    background-color: #fcfbf9;
+}

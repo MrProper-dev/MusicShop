@@ -4,13 +4,19 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 import musicshop.controllers.util.PaginationForThymeleaf;
+import musicshop.dto.CategoryFullDto;
+import musicshop.dto.PictureFullDto;
+import musicshop.dto.ProductFullDto;
 import musicshop.dto.ProductPreviewForAdminDto;
 import musicshop.entities.Category;
 import musicshop.services.CategoryService;
@@ -38,8 +44,8 @@ public class AdminController {
     public String showProducts(Model model, 
             @RequestParam(name = "page", required = false) Integer page, 
             @RequestParam(name = "cat-id", required = false) List<Integer> categoryIds,
-            @RequestParam(name = "price_from", required = false) Integer priceFrom,
-            @RequestParam(name = "price_to", required = false) Integer priceTo,
+            @RequestParam(name = "price_from", required = false) Float priceFrom,
+            @RequestParam(name = "price_to", required = false) Float priceTo,
             @RequestParam(name = "search", required = false) String search){
         List<Category> categories = categoryService.getAllCategories();
         Page<ProductPreviewForAdminDto> productsPage = productService.getCatalogPageForAdmin(page, categoryIds, priceFrom, priceTo, search);
@@ -56,6 +62,32 @@ public class AdminController {
         model.addAttribute("lastPage", pagination.getLastPage(currentPage, lastPage));
 
         return "admin/products_list";
+    }
+
+    @GetMapping("/products/{id}")
+    public String showProduct(Model model, @PathVariable("id") Long id){
+        ProductFullDto product = null;
+        try{
+            product = productService.getFullDataById(id);
+        }catch (Exception e){
+            throw new ResponseStatusException(HttpStatusCode.valueOf(404));
+        }
+        
+        List<PictureFullDto> pictures = product.getPictures();
+        PictureFullDto mainPicture = null;
+        for (PictureFullDto picture : pictures) {
+            if(picture.getIsMain()){
+                mainPicture = picture;
+                break;
+            }
+        }
+
+        List<CategoryFullDto> categories = categoryService.getCategoriesWithoutByProductId(id);
+
+        model.addAttribute("product", product);
+        model.addAttribute("categories", categories);
+        model.addAttribute("mainPicture", mainPicture);
+        return "admin/product_card";
     }
 
 }

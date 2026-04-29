@@ -73,7 +73,7 @@
                     </div>
                     <div class="product-details">
                         <div class="product-name" th:text="${product.name}"></div>
-                        <div class="product-cost" th:text="${#numbers.formatDecimal(product.price, 0, 'WHITESPACE', 2, 'POINT')} + '₽'"></div>
+                        <div class="product-cost" th:text="${#numbers.formatDecimal(product.price, 0, 'WHITESPACE', 2, 'POINT')} + ' ₽'"></div>
                         <div class="product-stock-row">Остаток: <span class="stock-value" th:text="${product.quantity} + ' шт.'"></span></div>
                         <div class="admin-actions">
                             <button class="delete-product-btn">Удалить</button>
@@ -103,6 +103,7 @@
     <div class="modal-content">
         <div class="modal-body">
             <p id="modalText"></p>
+            <input type="text" id="modalInput" class="modal-input">
         </div>
         <div class="modal-buttons">
             <button id="modalCancel" class="modal-button">Назад</button>

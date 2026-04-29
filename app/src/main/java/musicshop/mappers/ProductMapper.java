@@ -20,7 +20,9 @@ public class ProductMapper {
         List<Picture> pictures = product.getPictures();
         ProductFullDto dto = new ProductFullDto();
         dto.setId(product.getId());
-        dto.setCategory(new CategoryFullDto(category.getId(), category.getName()));
+        if(category != null){
+            dto.setCategory(new CategoryFullDto(category.getId(), category.getName()));
+        }
         dto.setName(product.getName());
         dto.setDescription(product.getDescription());
         dto.setPrice(product.getPrice());
