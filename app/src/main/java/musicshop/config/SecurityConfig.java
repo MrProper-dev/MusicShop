@@ -86,7 +86,7 @@ public class SecurityConfig{
                 "/api/v1/clients/signup",
                 "/client/css/**", 
                 "/client/js/**").permitAll()
-            .requestMatchers("/api/v1/products/**", "/api/v1/categories/**").hasAnyRole("ADMIN")
+            .requestMatchers("/api/v1/products/**", "/api/v1/categories/**", "/api/v1/pictures/**").hasAnyRole("ADMIN")
             .requestMatchers("/api/v1/purchases/**").hasAnyRole("SELLER")
             .requestMatchers("/pictures/**", "/api/v1/orders/**").hasAnyRole("CLIENT", "SELLER", "ADMIN")
             .anyRequest().hasRole("CLIENT")

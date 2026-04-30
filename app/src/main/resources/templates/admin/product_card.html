@@ -43,12 +43,13 @@
                 <img th:if="${mainPicture != null}" class="cross-img-main" th:src="'/pictures/' + ${mainPicture.path}" th:alt="${product.name}">
             </div>
             <div class="thumb-row">
-                <div th:each="img : ${product.pictures}" class="thumb-item">
+                <div th:each="img : ${product.pictures}" class="thumb-item" th:data-pic-id="${img.id}">
                     <img class="thumb-img" th:src="'/pictures/' + ${img.path}">
+                    <button class="delete-btn">x</button>
                 </div>
                 <div class="thumb-item">
                     <label class="upload-label">
-                        <input type="file" name="picture" style="display: none;" class="input-img">
+                        <input type="file" name="picture" style="display: none;" class="input-img" accept="image/*">
                         <img class="img-cross" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23f9f5ef'/%3E%3Cline x1='50' y1='30' x2='50' y2='70' stroke='%238c7a67' stroke-width='6' stroke-linecap='round'/%3E%3Cline x1='30' y1='50' x2='70' y2='50' stroke='%238c7a67' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E">
                     </label>
                 </div>
@@ -59,12 +60,12 @@
             <form id="productEditForm" th:data-product-id="${product.id}"></form>
             <div class="edit-field">
                 <label>Название товара</label>
-                <input form="productEditForm" type="text" name="product_name" th:value="${product.name}">
+                <input form="productEditForm" type="text" name="name" th:value="${product.name}">
             </div>
 
             <div class="edit-field">
                 <label>Категория</label>
-                <select form="productEditForm" class="product-category-select" name="category">
+                <select form="productEditForm" class="product-category-select" name="categoryId">
                     <option th:if="${product.category != null}" th:value="${product.category.id}" th:text="${product.category.name}" selected>Электрогитары</option>
                     <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
                 </select>

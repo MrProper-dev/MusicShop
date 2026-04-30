@@ -9,6 +9,7 @@ import org.apache.catalina.startup.Tomcat;
 import org.apache.tomcat.util.descriptor.web.FilterDef;
 import org.apache.tomcat.util.descriptor.web.FilterMap;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.DispatcherServlet;
 
@@ -39,14 +40,25 @@ public class App{
         wrapper.setMultipartConfigElement(new MultipartConfigElement(""));
         ctx.addServletMappingDecoded("/", "dispatcher");
 
-        FilterDef filterDef = new FilterDef();
-        filterDef.setFilter(new DelegatingFilterProxy("springSecurityFilterChain"));
-        filterDef.setFilterName("springSecurityFilterChain");
-        ctx.addFilterDef(filterDef);
-        FilterMap filterMap = new FilterMap();
-        filterMap.setFilterName("springSecurityFilterChain");
-        filterMap.addURLPattern("/*");
-        ctx.addFilterMap(filterMap);
+        FilterDef filterDefEncoding = new FilterDef();
+        filterDefEncoding.setFilter(new CharacterEncodingFilter("UTF-8"));
+        filterDefEncoding.setFilterName("characterEncodingFilter");
+        ctx.addFilterDef(filterDefEncoding);
+
+        FilterMap filterMapEncoding = new FilterMap();
+        filterMapEncoding.setFilterName("characterEncodingFilter");
+        filterMapEncoding.addURLPattern("/*");
+        ctx.addFilterMap(filterMapEncoding);
+        
+
+        FilterDef filterDefSecurity = new FilterDef();
+        filterDefSecurity.setFilter(new DelegatingFilterProxy("springSecurityFilterChain"));
+        filterDefSecurity.setFilterName("springSecurityFilterChain");
+        ctx.addFilterDef(filterDefSecurity);
+        FilterMap filterMapSecurity = new FilterMap();
+        filterMapSecurity.setFilterName("springSecurityFilterChain");
+        filterMapSecurity.addURLPattern("/*");
+        ctx.addFilterMap(filterMapSecurity);
 
         tomcat.start();
         tomcat.getServer().await();

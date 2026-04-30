@@ -1,7 +1,6 @@
 package musicshop.controllers.rest;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import musicshop.App;
+import musicshop.dto.PictureDto;
 import musicshop.entities.Product;
 import musicshop.services.ProductService;
 
@@ -46,11 +45,21 @@ public class ProductRestController {
     }
 
     @PutMapping("/{id}")
-    public void updateProduct(@PathVariable("id") Long productId, @RequestParam(value = "main-picture", required = false) MultipartFile mainPicture){
-        try (FileOutputStream fileOutputStream = new FileOutputStream(App.RESOURCES_PATH + "/static/pictures/some.jpg")) {
-            fileOutputStream.write(mainPicture.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
+    public List<PictureDto> updateProduct(
+        @PathVariable("id") Long productId, 
+        @RequestParam(value = "main-picture", required = false) MultipartFile mainPicture,
+        @RequestParam(value = "picture", required = false) List<MultipartFile> pictures,
+        @RequestParam("name") String name,
+        @RequestParam("categoryId") Long categoryId,
+        @RequestParam("price") Float price,
+        @RequestParam("quantity") Integer quantity,
+        @RequestParam("description") String description,
+        @RequestParam(value = "main-picture-id", required = false) Long mainPictureId){
+        try{
+            return productService.updateProduct(productId, categoryId, name, description, price, quantity, mainPicture, pictures, mainPictureId);
+        }catch (RuntimeException exception){
+            exception.printStackTrace();
+            throw new ResponseStatusException(HttpStatusCode.valueOf(409), exception.getMessage());
         }
     }
 

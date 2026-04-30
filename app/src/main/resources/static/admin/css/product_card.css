@@ -171,6 +171,7 @@ body {
 .thumb-item {
     width: 88px;
     height: 88px;
+    position: relative;
     background-color: #f9f5ef;
     border: 1px solid #e2d8cf;
     border-radius: 18px;
@@ -178,7 +179,6 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    cursor: pointer;
 }
 
 .upload-label {
@@ -201,6 +201,24 @@ body {
     height: 100%;
     object-fit: cover;
     display: block;
+}
+
+.delete-btn {
+    position: absolute;
+    border-style: hidden;
+    border-bottom-left-radius: 5px;
+    right: 0;
+    top: 0;
+    width: 30%;
+    height: 30%;
+    opacity: 0;
+    background-color: #e2d8cf;
+    transition: opacity 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.thumb-item:hover > .delete-btn{
+    opacity: 1;
 }
 
 .info-area {
