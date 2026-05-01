@@ -10,4 +10,6 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
 
     Seller findByLogin(String login);
 
+    Boolean existsByLogin(String login);
+
 }

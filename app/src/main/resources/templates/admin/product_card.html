@@ -88,7 +88,7 @@
 
             <div class="add-to-supply">
                 <h4>Добавить в поставку</h4>
-                <div class="supply-row">
+                <div class="supply-row" th:data-product-id="${product.id}">
                     <div class="quantity-field">
                         <label>Количество</label>
                         <input type="number" class="quantity-input" name="supply_qty" value="1" min="1">
@@ -98,7 +98,7 @@
             </div>
 
             <div class="save-actions">
-                <button type="submit" class="btn-save" form="productEditForm">Сохранить изменения</button>
+                <button class="btn-save" form="productEditForm">Сохранить изменения</button>
             </div>
         </div>
     </div>

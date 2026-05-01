@@ -180,6 +180,7 @@ productEditForm.addEventListener('submit', async function(event){
 function updatePicutures(pictureList){
     let inner = '';
     pictureList.forEach(p => {
+        if(p == null) return;
         inner += `
             <div class="thumb-item" data-pic-id="${p.id}">
                 <img class="thumb-img" src="/pictures/${p.path}">
@@ -209,3 +210,35 @@ function updatePicutures(pictureList){
         delBtn.addEventListener('click', () => deletePic(picDiv, pic));
     });
 }
+
+const addProductDiv = document.querySelector('.supply-row');
+const addProductBtn = addProductDiv.querySelector('.btn-add-to-supply');
+const addProductInputQuantity = addProductDiv.querySelector('.quantity-input')
+addProductBtn.addEventListener('click', async function(){
+    const response = await fetch(`/api/v1/deliveries/product/${addProductDiv.dataset.productId}`, {
+        method : 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body : JSON.stringify({
+            quantity : addProductInputQuantity.value
+        })
+    });
+    if(response.ok) {
+        showToast('Товар добавлен в поставку');
+    }else if(response.status == 409){
+        showToast('Нет активной поставки')
+    }else{
+        showToast(`Ошибка сервера: ${response.status}`)
+    }
+});
+
+addProductInputQuantity.addEventListener('input', function(event) {
+    if(!/^\d+$/.test(addProductInputQuantity.value) || addProductInputQuantity.value <= 0){
+        addProductInputQuantity.value = 1;
+    }
+});
+
+addProductInputQuantity.addEventListener('focus', function() {
+    this.select();
+});

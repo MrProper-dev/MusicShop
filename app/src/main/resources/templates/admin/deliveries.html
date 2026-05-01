@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MusicStore | Поставки (Администратор)</title>
+    <link rel="stylesheet" href="/admin/css/deliveries.css">
+    <script src="/admin/js/deliveries.js" defer></script>
+</head>
+<body>
+<div class="app-container">
+    <div class="main-header">
+        <div class="header-row">
+            <div class="brand">
+                <div class="logo-emojy">🎸</div>
+                <div class="store-title">MuseLand<span class="role-badge">Администратор</span></div>
+            </div>
+            <div class="nav-menu">
+                <a href="/admin/products">Каталог</a>
+                <a href="/admin/sellers">Продавцы</a>
+                <a href="/admin/clients">Клиенты</a>
+                <a href="/admin/orders">Заказы</a>
+                <a href="/admin/purchases">Покупки</a>
+                <a href="/admin/deliveries" class="active-nav">Поставки</a>
+                <a href="/logout">Выйти</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="supplies-content">
+        <div class="page-header">
+            <h1 class="page-title">Поставки</h1>
+        </div>
+
+        <div class="create-supply-form">
+            <h3>Создание новой поставки</h3>
+            <div class="form-field">
+                <label>Поставщик</label>
+                <input type="text" placeholder="Название компании" th:value="${actualDelivery.supplierName}">
+            </div>
+
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Количество</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product : ${actualDelivery.products}" th:data-product-id="${product.id}">
+                        <td><a class="link-name" th:href="'/admin/products/' + ${product.id}" th:text="${product.name}"></a></td>
+                        <td>
+                            <div class="quantity-control">
+                                <button class="quantity-btn">−</button>
+                                <input type="text" class="quantity-input" th:value="${product.quantity}" readonly>
+                                <button class="quantity-btn">+</button>
+                            </div>
+                        </td>
+                        <td class="action-cell"><button class="btn-delete-product">Удалить</button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="supply-total" th:text="'Всего товаров: ' + ${actualDelivery.totalQuantity} + ' шт.'"></div>
+
+            <div class="form-actions">
+                <button class="btn-submit">Подтвердить поставку</button>
+            </div>
+        </div>
+
+        <div class="section-divider">
+            <span class="divider-title">История поставок</span>
+            <div class="date-range-group">
+                <div class="date-field">
+                    <label>От:</label>
+                    <input type="date" name="from">
+                </div>
+                <div class="date-field">
+                    <label>До:</label>
+                    <input type="date" name="to">
+                </div>
+            </div>
+        </div>
+
+        <div class="history-supply-card" th:each="delivery : ${deliveries}">
+            <div class="history-header">
+                <div class="supply-number" th:text="'Поставка № ' + ${delivery.id}"></div>
+                <div class="supply-date" th:text="${#temporals.format(delivery.timestamp, 'dd MMMM yyyy, HH:mm')}"></div>
+            </div>
+            <div class="history-info">
+                <div class="supply-admin">
+                    Администратор: <span class="admin-name" th:text="${delivery.adminName}"></span>
+                </div>
+                <div class="supply-admin" th:text="${delivery.supplierName}"></div>
+            </div>
+            <table class="products-table issued">
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Количество</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="product : ${delivery.products}">
+                        <td><a class="link-name" th:href="'/admin/products/' + ${product.id}" th:text="${product.name}"></a></td>
+                        <td th:text="${product.quantity} + ' шт.'"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination-wrapper">
+            <div class="pagination-list">
+                    <a th:if="${firstPage}" class="page-btn" th:text="${firstPage}"></a>
+                    <span th:if="${firstPage}" class="page-btn page-dots">⋯</span>
+                    <a th:each="page : ${pagesBefore}" class="page-btn" th:text="${page}"></a>
+                    <a class="page-btn active-page" th:text="${currentPage}"></a>
+                    <a th:each="page : ${pagesAfter}" class="page-btn" th:text="${page}"></a>
+                    <span th:if="${lastPage}" class="page-btn page-dots">⋯</span>
+                    <a th:if="${lastPage}" class="page-btn" th:text="${lastPage}"></a>
+                </div>
+        </div>
+    </div>
+</div>
+
+<dialog id="modal" class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-body">
+            <p id="modalText"></p>
+            <input type="text" id="modalInput" class="modal-input">
+        </div>
+        <div class="modal-buttons">
+            <button id="modalCancel" class="modal-button">Назад</button>
+            <button id="modalOk" class="modal-button">Верно</button>
+        </div>
+    </div>
+</dialog>
+
+<div class="toast-message"></div>
+</body>
+</html>

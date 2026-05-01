@@ -1,10 +1,13 @@
 package musicshop.controllers;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +18,17 @@ import org.springframework.web.server.ResponseStatusException;
 
 import musicshop.controllers.util.PaginationForThymeleaf;
 import musicshop.dto.CategoryFullDto;
+import musicshop.dto.DeliveryDto;
 import musicshop.dto.PictureFullDto;
 import musicshop.dto.ProductFullDto;
 import musicshop.dto.ProductPreviewForAdminDto;
+import musicshop.entities.Admin;
 import musicshop.entities.Category;
+import musicshop.entities.Seller;
 import musicshop.services.CategoryService;
+import musicshop.services.DeliveryService;
 import musicshop.services.ProductService;
+import musicshop.services.SellerService;
 
 @Controller
 @RequestMapping("/admin")
@@ -34,6 +42,12 @@ public class AdminController {
 
     @Autowired
     private PaginationForThymeleaf pagination;
+
+    @Autowired
+    private SellerService sellerService;
+
+    @Autowired
+    private DeliveryService deliveryService;
 
     @GetMapping("/login")
     public String admin(){
@@ -60,7 +74,6 @@ public class AdminController {
         model.addAttribute("currentPage", currentPage);
         model.addAttribute("pagesAfter", pagination.getPagesAfter(currentPage, lastPage));
         model.addAttribute("lastPage", pagination.getLastPage(currentPage, lastPage));
-
         return "admin/products_list";
     }
 
@@ -88,6 +101,38 @@ public class AdminController {
         model.addAttribute("categories", categories);
         model.addAttribute("mainPicture", mainPicture);
         return "admin/product_card";
+    }
+
+    @GetMapping("/sellers")
+    public String showSellers(Model model){
+        List<Seller> sellers = sellerService.findAllSellers();
+
+        model.addAttribute("sellers", sellers);
+        return "admin/sellers";
+    }
+
+    @GetMapping("/deliveries")
+    public String showDeliveries(
+        Model model,
+        @AuthenticationPrincipal UserDetails userDetails,
+        @RequestParam(name = "page", required = false) Integer page,
+        @RequestParam(name = "from", required = false) LocalDate from,
+        @RequestParam(name = "to", required = false) LocalDate to){
+        Admin admin = (Admin) userDetails;
+        Page<DeliveryDto> deliveries = deliveryService.getDeliveriesPage(page, from, to);
+        DeliveryDto actualDelivery = deliveryService.getActualDelivery(admin.getId());
+
+        model.addAttribute("deliveries", deliveries);
+        model.addAttribute("actualDelivery", actualDelivery);
+
+        Integer currentPage = deliveries.getNumber()+1;
+        Integer lastPage = deliveries.getTotalPages();
+        model.addAttribute("firstPage", pagination.getFirstPage(currentPage));
+        model.addAttribute("pagesBefore", pagination.getPagesBefore(currentPage));
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("pagesAfter", pagination.getPagesAfter(currentPage, lastPage));
+        model.addAttribute("lastPage", pagination.getLastPage(currentPage, lastPage));
+        return "admin/deliveries";
     }
 
 }

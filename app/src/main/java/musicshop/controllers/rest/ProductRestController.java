@@ -20,8 +20,6 @@ import musicshop.dto.PictureDto;
 import musicshop.entities.Product;
 import musicshop.services.ProductService;
 
-
-//TODO: доделать старницу карточки товара для админа
 @RestController
 @RequestMapping("/api/v1/products")
 public class ProductRestController {
