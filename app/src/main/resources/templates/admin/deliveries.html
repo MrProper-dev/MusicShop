@@ -32,11 +32,11 @@
             <h1 class="page-title">Поставки</h1>
         </div>
 
-        <div class="create-supply-form">
+        <div class="create-supply-form" th:if="${actualDelivery != null}">
             <h3>Создание новой поставки</h3>
             <div class="form-field">
                 <label>Поставщик</label>
-                <input type="text" placeholder="Название компании" th:value="${actualDelivery.supplierName}">
+                <input class="deliverier" type="text" placeholder="Название компании" th:value="${actualDelivery.supplierName}">
             </div>
 
             <table class="products-table">
@@ -48,13 +48,13 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="product : ${actualDelivery.products}" th:data-product-id="${product.id}">
+                    <tr class="product-list-item" th:each="product : ${actualDelivery.products}" th:data-product-id="${product.id}">
                         <td><a class="link-name" th:href="'/admin/products/' + ${product.id}" th:text="${product.name}"></a></td>
                         <td>
                             <div class="quantity-control">
-                                <button class="quantity-btn">−</button>
+                                <button class="quantity-btn less">−</button>
                                 <input type="text" class="quantity-input" th:value="${product.quantity}" readonly>
-                                <button class="quantity-btn">+</button>
+                                <button class="quantity-btn more">+</button>
                             </div>
                         </td>
                         <td class="action-cell"><button class="btn-delete-product">Удалить</button></td>
@@ -112,14 +112,14 @@
 
         <div class="pagination-wrapper">
             <div class="pagination-list">
-                    <a th:if="${firstPage}" class="page-btn" th:text="${firstPage}"></a>
-                    <span th:if="${firstPage}" class="page-btn page-dots">⋯</span>
-                    <a th:each="page : ${pagesBefore}" class="page-btn" th:text="${page}"></a>
-                    <a class="page-btn active-page" th:text="${currentPage}"></a>
-                    <a th:each="page : ${pagesAfter}" class="page-btn" th:text="${page}"></a>
-                    <span th:if="${lastPage}" class="page-btn page-dots">⋯</span>
-                    <a th:if="${lastPage}" class="page-btn" th:text="${lastPage}"></a>
-                </div>
+                <a th:if="${firstPage}" class="page-btn" th:text="${firstPage}"></a>
+                <span th:if="${firstPage}" class="page-btn page-dots">⋯</span>
+                <a th:each="page : ${pagesBefore}" class="page-btn" th:text="${page}"></a>
+                <a class="page-btn active-page" th:text="${currentPage}"></a>
+                <a th:each="page : ${pagesAfter}" class="page-btn" th:text="${page}"></a>
+                <span th:if="${lastPage}" class="page-btn page-dots">⋯</span>
+                <a th:if="${lastPage}" class="page-btn" th:text="${lastPage}"></a>
+            </div>
         </div>
     </div>
 </div>

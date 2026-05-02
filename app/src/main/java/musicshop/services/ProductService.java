@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,7 +45,7 @@ public class ProductService {
     public PictureMapper pictureMapper;
 
     public Page<ProductPreviewDto> getCatalogPage(Integer page, List<Integer> categoryIds, Float priceFrom, Float priceTo, String search){
-        Pageable pageable = PageRequest.of(page == null ? 0 : page < 0 ? 0 : page  , CATALOG_PAGE_SIZE);
+        Pageable pageable = PageRequest.of(page == null ? 0 : page < 0 ? 0 : page  , CATALOG_PAGE_SIZE).withSort(Sort.by("id"));
         Page<ProductPreviewDto> productsPage;
         if(search != null && !search.isEmpty()){
             productsPage = productRepository.findAllWithoutCategoryAndPicturesAndDescriptionBySearchNameAndPriceNot(pageable, search, 0f);
@@ -65,7 +66,7 @@ public class ProductService {
     }
 
     public Page<ProductPreviewForAdminDto> getCatalogPageForAdmin(Integer page, List<Integer> categoryIds, Float priceFrom, Float priceTo, String search){
-        Pageable pageable = PageRequest.of(page == null ? 0 : page < 0 ? 0 : page  , CATALOG_PAGE_SIZE);
+        Pageable pageable = PageRequest.of(page == null ? 0 : page < 0 ? 0 : page  , CATALOG_PAGE_SIZE).withSort(Sort.by("id"));
         Page<ProductPreviewForAdminDto> productsPage;
         if(search != null && !search.isEmpty()){
             productsPage = productRepository.findAllWithoutCategoryAndPicturesAndDescriptionAndQuantityBySearchName(pageable, search);

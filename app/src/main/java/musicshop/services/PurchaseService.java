@@ -1,14 +1,21 @@
 package musicshop.services;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import musicshop.dto.PurchaseForAdminDto;
 import musicshop.dto.PurchaseForSellerDto;
 import musicshop.entities.Product;
 import musicshop.entities.ProductPurchase;
@@ -22,6 +29,8 @@ import musicshop.repositories.PurchaseRepository;
 
 @Service
 public class PurchaseService {
+
+    private final Integer PURCHASES_PAGE_SIZE = 5;
 
     @Autowired
     private PurchaseRepository purchaseRepository;
@@ -141,6 +150,33 @@ public class PurchaseService {
         }
         
         purchase.setStatus(Purchase.Status.ISSUED);
+    }
+
+    public Page<PurchaseForAdminDto> getPurchasesForAdmin(String strStatus, LocalDate from, LocalDate to, Integer page){
+        Pageable pageable = PageRequest.of(page == null ? 0 : page < 0 ? 0 : page , PURCHASES_PAGE_SIZE).withSort(Sort.by("timestamp").descending());
+        Page<Purchase> purchases = null;
+        List<Purchase.Status> statuses = new ArrayList<>();
+        statuses.add(Purchase.Status.CREATED);
+        statuses.add(Purchase.Status.ISSUED);
+        if(strStatus != null){
+            if(strStatus.equals("CREATED")) statuses.remove(1);
+            if(strStatus.equals("ISSUED")) statuses.remove(0);
+        }
+        if(from != null && to != null && from.isBefore(to)){
+            purchases = purchaseRepository.findWithProductPurchasesWithProductAndWithSellerByStatusInAndTimestampAfterAndTimestampBefore(statuses, from.atStartOfDay(), to.atStartOfDay(), pageable);
+        }else if(from != null){
+            purchases = purchaseRepository.findWithProductPurchasesWithProductAndWithSellerByStatusInAndTimestampAfter(statuses, from.atStartOfDay(), pageable);
+        }else if(to != null){
+            purchases = purchaseRepository.findWithProductPurchasesWithProductAndWithSellerByStatusInAndTimestampBefore(statuses, to.atStartOfDay(), pageable);
+        }else{
+            purchases = purchaseRepository.findWithProductPurchasesWithProductAndWithSellerByStatusIn(statuses, pageable);
+        }
+
+        List<PurchaseForAdminDto> dtos = purchases.getContent().stream()
+            .map(purchaseMapper::mapToPurchaseForAdminDto)
+            .toList();
+
+        return new PageImpl<>(dtos, pageable, purchases.getTotalElements());
     }
 
 }

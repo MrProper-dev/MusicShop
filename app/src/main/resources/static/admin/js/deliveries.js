@@ -94,3 +94,104 @@ function fillFields(){
         toInput.value = to;
     }
 }
+
+const products = document.querySelectorAll('.product-list-item');
+products.forEach(product => {
+    const productId = product.dataset.productId;
+    const delBtn = product.querySelector('.btn-delete-product');
+    delBtn.addEventListener('click', async function(){
+        const response = await fetch(`/api/v1/deliveries/product/${productId}`, {
+            method : 'DELETE'
+        });
+        if(response.ok) {
+            showToast('Товар удален из поставки');
+            product.remove();
+        }else{
+            showToast(`Ошибка сервера: ${response.status}`)
+        }
+    });
+    const quantityInput = product.querySelector('.quantity-input');
+    const lessBtn = product.querySelector('.quantity-btn.less');
+    const moreBtn = product.querySelector('.quantity-btn.more');
+    let timeoutUpdate;
+    lessBtn.addEventListener('click', function(event){
+        quantityInput.value--;
+        quantityInput.dispatchEvent(new Event('input'));
+        updateTotalQuantity(quantityInput.value);
+    });
+    moreBtn.addEventListener('click', function(event){
+        quantityInput.value++;
+        quantityInput.dispatchEvent(new Event('input'));
+        updateTotalQuantity(quantityInput.value);
+    });
+    quantityInput.addEventListener('focus', function() {
+        this.select();
+    });
+    quantityInput.addEventListener('change', function(){
+        updateTotalQuantity(quantityInput.value);
+    });
+    quantityInput.addEventListener('input', async function(event) {
+        clearTimeout(timeoutUpdate);
+        if(!/^\d+$/.test(quantityInput.value) || quantityInput.value <= 0){
+            quantity.value = 1;
+        }
+        timeoutUpdate = setTimeout(() => {
+            fetch(`/api/v1/deliveries/product/${productId}`, {
+                method : 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body : JSON.stringify({
+                    quantity : quantityInput.value
+                })
+            });
+        }, 700);
+    });
+});
+
+const totalQuantity = document.querySelector('.supply-total');
+function updateTotalQuantity(){
+    const quantities = document.querySelectorAll('.quantity-input');
+    let count = 0;
+    quantities.forEach(quantity => {
+        count += parseInt(quantity.value);
+    });
+    totalQuantity.textContent = `Всего товаров: ${count} шт.`
+}
+
+const actualDelivery = document.querySelector('.create-supply-form');
+const confirmDeliveryBtn = document.querySelector('.btn-submit');
+if(confirmDeliveryBtn)
+confirmDeliveryBtn.addEventListener('click', async function(){
+    if(!await confirm('Вы точно хотите завершить прием поставки?')) return;
+    const response = await fetch('/api/v1/deliveries/issue', {
+        method : 'POST'
+    });
+    if(response.ok) {
+        showToast('Поставка принята, данные о количестве товаров обновлены');
+        actualDelivery.remove();
+    }else if(response.status == 409){
+        showToast('Поставка должна содержать хотя бы один товар');
+    }else{
+        showToast(`Ошибка сервера: ${response.status}`)
+    }
+});
+
+const deliverierInput = document.querySelector('.deliverier');
+let timeoutUpdateDeliverier; 
+if(deliverierInput)
+deliverierInput.addEventListener('input', async function(){
+    clearTimeout(timeoutUpdateDeliverier);
+    timeoutUpdateDeliverier = setTimeout(() => {
+        fetch('/api/v1/deliveries/deliverier', {
+            method : 'PATCH',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body : JSON.stringify({
+                deliverier : deliverierInput.value
+            })
+        });
+    }, 700)
+});
+

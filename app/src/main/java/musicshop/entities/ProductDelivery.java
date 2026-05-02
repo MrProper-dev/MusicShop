@@ -1,5 +1,6 @@
 package musicshop.entities;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -23,7 +24,7 @@ public class ProductDelivery {
     @EmbeddedId
     private ProductDeliveryId id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @MapsId("productId")
     @JoinColumn(name = "product_id")
     private Product product;

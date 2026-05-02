@@ -1,6 +1,7 @@
 package musicshop.services;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import musicshop.dto.DeliveryDto;
+import musicshop.entities.Admin;
 import musicshop.entities.Delivery;
 import musicshop.entities.Product;
 import musicshop.entities.ProductDelivery;
@@ -20,7 +23,6 @@ import musicshop.mappers.DeliveryMapper;
 import musicshop.repositories.DeliveryRepositroy;
 import musicshop.repositories.ProductDeliveryRepository;
 
-//TODO: сделать создание поставки автосатически
 @Service
 public class DeliveryService {
 
@@ -35,10 +37,19 @@ public class DeliveryService {
     @Autowired
     private DeliveryMapper deliveryMapper;
 
+    @Transactional
     public void putProductToActiveDelivery(Long productId, Integer quantity, Long adminId){
         if(quantity == null || quantity <= 0) throw new IllegalArgumentException();
         Delivery delivery = deliveryRepositroy.findByAdminIdAndStatus(adminId, Delivery.Status.CREATED);
-        if(delivery == null) throw new IllegalStateException();
+        if(delivery == null){
+            delivery = new Delivery();
+            Admin admin = new Admin();
+            admin.setId(adminId);
+            delivery.setAdmin(admin);
+            delivery.setStatus(Delivery.Status.CREATED);
+            delivery.setSupplierName("");
+            deliveryRepositroy.save(delivery);
+        }
         ProductDelivery productDelivery = productDeliveryRepository.findById(new ProductDeliveryId(productId, delivery.getId())).orElse(null);
         if(productDelivery == null){
             productDelivery = new ProductDelivery();
@@ -76,5 +87,40 @@ public class DeliveryService {
         Delivery delivery = deliveryRepositroy.findWithAdminAndWithProductByAdminIdAndStatus(adminId, Delivery.Status.CREATED);
         return deliveryMapper.mapToDeliveryDto(delivery);
     } 
+
+    @Transactional
+    public void deleteProductFromActiveDelivery(Long productId, Long adminId){
+        productDeliveryRepository.deleteByProductIdAndDeliveryAdminIdAndDeliveryStatus(productId, adminId, Delivery.Status.CREATED);
+    }
+
+    @Transactional
+    public void takeActiveDelivery(Long adminId){
+        Delivery delivery = deliveryRepositroy.findWithAdminAndWithProductByAdminIdAndStatus(adminId, Delivery.Status.CREATED);
+        if(delivery.getProductDeliveries().size() == 0) throw new IllegalStateException();
+        for(ProductDelivery pd : delivery.getProductDeliveries()){
+            Product product = pd.getProduct();
+            product.setQuantity(product.getQuantity() + pd.getQuantity());
+        }
+        delivery.setTimestamp(LocalDateTime.now());
+        delivery.setStatus(Delivery.Status.ISSUED);
+        deliveryRepositroy.save(delivery);
+    }
+
+    @Transactional
+    public void updatDeliverier(String deliverier, Long adminId){
+        if(deliverier == null) throw new NullPointerException();
+        Delivery delivery = deliveryRepositroy.findByAdminIdAndStatus(adminId, Delivery.Status.CREATED);
+        delivery.setSupplierName(deliverier);
+        deliveryRepositroy.save(delivery);
+    }
+
+    @Transactional
+    public void updateProductQuantity(Long productId, Integer quantity, Long adminId){
+        ProductDelivery productDelivery = productDeliveryRepository.findByProductIdAndDeliveryAdminIdAndDeliveryStatus(productId, adminId, Delivery.Status.CREATED);
+        if(productDelivery == null) throw new IllegalArgumentException();
+        if(quantity == null || quantity < 0) throw new IllegalArgumentException();
+        productDelivery.setQuantity(quantity);
+        productDeliveryRepository.save(productDelivery);
+    }
 
 }

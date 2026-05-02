@@ -73,12 +73,12 @@
 
             <div class="edit-field">
                 <label>Цена (₽)</label>
-                <input form="productEditForm" type="number" name="price" th:value="${product.price}" min="0">
+                <input form="productEditForm" type="number" name="price" th:value="${product.price}" min="0" step="0.01">
             </div>
 
             <div class="edit-field">
                 <label>Количество на складе (шт.)</label>
-                <input form="productEditForm" type="number" name="quantity" th:value="${product.quantity}" min="0">
+                <input form="productEditForm" type="number" name="quantity" th:value="${product.quantity}" min="0" step="1">
             </div>
 
             <div class="edit-field">
