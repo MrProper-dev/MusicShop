@@ -66,7 +66,7 @@
                     </thead>
                     <tbody>
                         <tr th:each="product : ${order.products}">
-                            <td><a th:href="'/seller/orders/' + ${product.productId}" class="product-link" th:text="${product.productName}">Электрогитара Fender Stratocaster</a></td>
+                            <td><a th:href="'/seller/orders/' + ${product.productId}" class="product-link" th:text="${product.productName}"></a></td>
                             <td th:text="${product.quantity + ' шт.'}"></td>
                             <td th:text="${#numbers.formatDecimal(product.price, 0, 'WHITESPACE', 2, 'POINT') + ' ₽'}"></td>
                             <td th:text="${#numbers.formatDecimal(product.subtotal, 0, 'WHITESPACE', 2, 'POINT') + ' ₽'}"></td>

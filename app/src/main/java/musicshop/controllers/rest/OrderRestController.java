@@ -56,11 +56,14 @@ public class OrderRestController {
     public void cancelOrder(
         @PathVariable("orderId") Long orderId,
         @AuthenticationPrincipal UserDetails userDetails) {
-        Client client = (Client) userDetails;
-        boolean cancelled = orderService.cancelOrder(client.getId(), orderId);
-        
-        if (!cancelled) {
-            throw new ResponseStatusException(HttpStatus.valueOf(400), "You can't cancel order with current status.");
+        if(userDetails instanceof Client){
+            Client client = (Client) userDetails;
+            boolean cancelled = orderService.cancelOrderForClient(client.getId(), orderId);
+            if (!cancelled) {
+                throw new ResponseStatusException(HttpStatus.valueOf(400), "You can't cancel order with current status.");
+            }
+        }else{
+            orderService.cancelOrderForAdmin(orderId);
         }
     }
 

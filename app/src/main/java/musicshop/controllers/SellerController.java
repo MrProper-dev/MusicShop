@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
 import musicshop.controllers.util.PaginationForThymeleaf;
-import musicshop.dto.OrderPreviewForSellerDto;
+import musicshop.dto.OrderPreviewDto;
 import musicshop.dto.PictureFullDto;
 import musicshop.dto.ProductFullDto;
 import musicshop.dto.ProductPreviewDto;
@@ -107,7 +107,7 @@ public class SellerController {
             @RequestParam(value = "status", required = false) String status,
             Model model) {
         
-        List<OrderPreviewForSellerDto> orders = orderService.getOrders(status);
+        List<OrderPreviewDto> orders = orderService.getOrdersForSeller(status);
         
         model.addAttribute("orders", orders);
         model.addAttribute("currentStatus", status != null ? status : "ALL");

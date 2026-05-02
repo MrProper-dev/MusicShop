@@ -19,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 import musicshop.controllers.util.PaginationForThymeleaf;
 import musicshop.dto.CategoryFullDto;
 import musicshop.dto.DeliveryDto;
+import musicshop.dto.OrderPreviewDto;
 import musicshop.dto.PictureFullDto;
 import musicshop.dto.ProductFullDto;
 import musicshop.dto.ProductPreviewForAdminDto;
@@ -28,6 +29,7 @@ import musicshop.entities.Category;
 import musicshop.entities.Seller;
 import musicshop.services.CategoryService;
 import musicshop.services.DeliveryService;
+import musicshop.services.OrderService;
 import musicshop.services.ProductService;
 import musicshop.services.PurchaseService;
 import musicshop.services.SellerService;
@@ -53,6 +55,9 @@ public class AdminController {
 
     @Autowired
     private PurchaseService purchaseService;
+
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/login")
     public String admin(){
@@ -160,6 +165,28 @@ public class AdminController {
         model.addAttribute("pagesAfter", pagination.getPagesAfter(currentPage, lastPage));
         model.addAttribute("lastPage", pagination.getLastPage(currentPage, lastPage));
         return "admin/purchases";
+    }
+
+    @GetMapping("/orders")
+    public String showOrders(
+        Model model,
+        @RequestParam(name = "status", required = false) String status,
+        @RequestParam(name = "page", required = false) Integer page,
+        @RequestParam(name = "from", required = false) LocalDate from,
+        @RequestParam(name = "to", required = false) LocalDate to){
+        Page<OrderPreviewDto> orders = orderService.getOrdersForAdmin(status, from, to, page);
+
+        model.addAttribute("orders", orders);
+        model.addAttribute("currentStatus", status != null ? status : "ALL");
+        
+        Integer currentPage = orders.getNumber()+1;
+        Integer lastPage = orders.getTotalPages();
+        model.addAttribute("firstPage", pagination.getFirstPage(currentPage));
+        model.addAttribute("pagesBefore", pagination.getPagesBefore(currentPage));
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("pagesAfter", pagination.getPagesAfter(currentPage, lastPage));
+        model.addAttribute("lastPage", pagination.getLastPage(currentPage, lastPage));
+        return "admin/orders";
     }
 
 }

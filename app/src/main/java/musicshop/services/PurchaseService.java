@@ -163,11 +163,11 @@ public class PurchaseService {
             if(strStatus.equals("ISSUED")) statuses.remove(0);
         }
         if(from != null && to != null && from.isBefore(to)){
-            purchases = purchaseRepository.findWithProductPurchasesWithProductAndWithSellerByStatusInAndTimestampAfterAndTimestampBefore(statuses, from.atStartOfDay(), to.atStartOfDay(), pageable);
+            purchases = purchaseRepository.findWithProductPurchasesWithProductAndWithSellerByStatusInAndTimestampAfterAndTimestampBefore(statuses, from.atStartOfDay(), to.plusDays(1l).atStartOfDay(), pageable);
         }else if(from != null){
             purchases = purchaseRepository.findWithProductPurchasesWithProductAndWithSellerByStatusInAndTimestampAfter(statuses, from.atStartOfDay(), pageable);
         }else if(to != null){
-            purchases = purchaseRepository.findWithProductPurchasesWithProductAndWithSellerByStatusInAndTimestampBefore(statuses, to.atStartOfDay(), pageable);
+            purchases = purchaseRepository.findWithProductPurchasesWithProductAndWithSellerByStatusInAndTimestampBefore(statuses, to.plusDays(1l).atStartOfDay(), pageable);
         }else{
             purchases = purchaseRepository.findWithProductPurchasesWithProductAndWithSellerByStatusIn(statuses, pageable);
         }

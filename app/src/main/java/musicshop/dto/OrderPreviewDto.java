@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderPreviewForSellerDto {
+public class OrderPreviewDto {
     private Long id;
     private LocalDateTime timestamp;
     private String status;

@@ -1,7 +1,10 @@
 package musicshop.repositories;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -44,5 +47,17 @@ public interface OrderRepository extends JpaRepository<Order, Long>{
     int updateStatusByIdAndPastStatus(@Param("orderId") Long orderId, 
                           @Param("newStatus") Order.Status newStatus, 
                           @Param("expectedStatus") Order.Status expectedStatus);
+
+    @EntityGraph(attributePaths = {"productOrders.product", "client"})
+    Page<Order> findWithClientAndProductOrdersWithProductByStatusIn(List<Order.Status> statuses, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"productOrders.product", "client"})
+    Page<Order> findWithClientAndProductOrdersWithProductByStatusInAndTimestampAfter(List<Order.Status> statuses, LocalDateTime from, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"productOrders.product", "client"})
+    Page<Order> findWithClientAndProductOrdersWithProductByStatusInAndTimestampBefore(List<Order.Status> statuses, LocalDateTime to, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"productOrders.product", "client"})
+    Page<Order> findWithClientAndProductOrdersWithProductByStatusInAndTimestampAfterAndTimestampBefore(List<Order.Status> statuses, LocalDateTime from, LocalDateTime to, Pageable pageable);
 
 }

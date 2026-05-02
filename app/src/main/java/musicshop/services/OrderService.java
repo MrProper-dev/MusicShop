@@ -1,17 +1,23 @@
 package musicshop.services;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import musicshop.dto.BasketDto;
 import musicshop.dto.OrderPreviewForClientDto;
-import musicshop.dto.OrderPreviewForSellerDto;
+import musicshop.dto.OrderPreviewDto;
 import musicshop.entities.Client;
 import musicshop.entities.Order;
 import musicshop.entities.Product;
@@ -24,6 +30,8 @@ import musicshop.repositories.ProductOrderRepository;
 
 @Service
 public class OrderService {
+
+    private final Integer ORDERS_PAGE_SIZE_FOR_ADMIN = 5;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -87,7 +95,7 @@ public class OrderService {
     }
 
     @Transactional
-    public boolean cancelOrder(Long clientId, Long orderId) {
+    public boolean cancelOrderForClient(Long clientId, Long orderId) {
         int updatedRows = orderRepository.updateStatusByIdAndPastStatusAndClientId(
                 orderId, 
                 Order.Status.CANCELED, 
@@ -138,7 +146,7 @@ public class OrderService {
         return productIds;
     }
 
-    public List<OrderPreviewForSellerDto> getOrders(String statusFilter) {
+    public List<OrderPreviewDto> getOrdersForSeller(String statusFilter) {
         List<Order> orders;
         
         if (statusFilter == null || statusFilter.isEmpty() || "ALL".equals(statusFilter)) {
@@ -153,7 +161,7 @@ public class OrderService {
         }
         
         return orders.stream()
-                .map(orderMapper::mapToOrderPreviewForSellerDto)
+                .map(orderMapper::mapToOrderPreviewDto)
                 .collect(Collectors.toList());
     }
 
@@ -172,6 +180,43 @@ public class OrderService {
         int updated = orderRepository.updateStatusByIdAndPastStatus(orderId, Order.Status.ISSUED, Order.Status.READY);
         if (updated == 0) {
             throw new RuntimeException("MBR");
+        }
+    }
+
+    public Page<OrderPreviewDto> getOrdersForAdmin(String strStatus, LocalDate from, LocalDate to, Integer page){
+        Pageable pageable = PageRequest.of(page == null ? 0 : page < 0 ? 0 : page , ORDERS_PAGE_SIZE_FOR_ADMIN).withSort(Sort.by("timestamp").descending());
+        Page<Order> orders = null;
+
+        List<Order.Status> statuses = List.of(Order.Status.CREATED, Order.Status.READY, Order.Status.ISSUED, Order.Status.CANCELED);
+        if(strStatus != null && !strStatus.isEmpty()){
+            try{
+                Order.Status status = Order.Status.valueOf(strStatus);
+                statuses = List.of(status);
+            }catch (IllegalArgumentException e) {}
+        }
+
+        if(from != null && to != null && from.isBefore(to)){
+            orders = orderRepository.findWithClientAndProductOrdersWithProductByStatusInAndTimestampAfterAndTimestampBefore(statuses, from.atStartOfDay(), to.plusDays(1l).atStartOfDay(), pageable);
+        }else if(from != null){
+            orders = orderRepository.findWithClientAndProductOrdersWithProductByStatusInAndTimestampAfter(statuses, from.atStartOfDay(), pageable);
+        }else if(to != null){
+            orders = orderRepository.findWithClientAndProductOrdersWithProductByStatusInAndTimestampBefore(statuses, to.plusDays(1l).atStartOfDay(), pageable);
+        }else{
+            orders = orderRepository.findWithClientAndProductOrdersWithProductByStatusIn(statuses, pageable);
+        }
+
+        List<OrderPreviewDto> dtos = orders.getContent().stream()
+            .map(orderMapper::mapToOrderPreviewDto)
+            .toList();
+
+        return new PageImpl<>(dtos, pageable, orders.getTotalElements());
+    }
+
+    @Transactional
+    public void cancelOrderForAdmin(Long orderId){
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new IllegalArgumentException());
+        if(order.getStatus() == Order.Status.CREATED || order.getStatus() == Order.Status.READY){
+            order.setStatus(Order.Status.CANCELED);
         }
     }
 

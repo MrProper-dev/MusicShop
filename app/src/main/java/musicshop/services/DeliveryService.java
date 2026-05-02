@@ -69,11 +69,11 @@ public class DeliveryService {
         
         
         if(from != null && to != null){
-            deliveries = deliveryRepositroy.findWithAdminAndWithProductByStatusAndTimestampAfterAndTimestampBefore(Delivery.Status.ISSUED, from.atStartOfDay(), to.atStartOfDay(), pageable);
+            deliveries = deliveryRepositroy.findWithAdminAndWithProductByStatusAndTimestampAfterAndTimestampBefore(Delivery.Status.ISSUED, from.atStartOfDay(), to.plusDays(1l).atStartOfDay(), pageable);
         }else if(from != null){
             deliveries = deliveryRepositroy.findWithAdminAndWithProductByStatusAndTimestampAfter(Delivery.Status.ISSUED, from.atStartOfDay(), pageable);
         }else if(to != null){
-            deliveries = deliveryRepositroy.findWithAdminAndWithProductByStatusAndTimestampBefore(Delivery.Status.ISSUED, to.atStartOfDay(), pageable);
+            deliveries = deliveryRepositroy.findWithAdminAndWithProductByStatusAndTimestampBefore(Delivery.Status.ISSUED, to.plusDays(1l).atStartOfDay(), pageable);
         }else{
             deliveries = deliveryRepositroy.findWithAdminAndWithProductByStatus(Delivery.Status.ISSUED, pageable);
         }

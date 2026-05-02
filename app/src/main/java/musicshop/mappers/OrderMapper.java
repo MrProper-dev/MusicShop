@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import musicshop.dto.BasketDto;
 import musicshop.dto.OrderPreviewForClientDto;
 import musicshop.dto.OrderPreviewForClientDto.OrderProductDto;
-import musicshop.dto.OrderPreviewForSellerDto;
+import musicshop.dto.OrderPreviewDto;
 import musicshop.entities.Order;
 import musicshop.entities.Picture;
 import musicshop.entities.ProductOrder;
@@ -51,31 +51,31 @@ public class OrderMapper {
         return new BasketDto(order.getId(), items, totalPrice.floatValue());
     }
 
-    public OrderPreviewForSellerDto mapToOrderPreviewForSellerDto(Order order) {
+    public OrderPreviewDto mapToOrderPreviewDto(Order order) {
         if (order == null) return null;
         
-        OrderPreviewForSellerDto dto = new OrderPreviewForSellerDto();
+        OrderPreviewDto dto = new OrderPreviewDto();
         dto.setId(order.getId());
         dto.setTimestamp(order.getTimestamp());
         dto.setStatus(order.getStatus().name());
         dto.setClientName(order.getClient().getFullName());
         dto.setClientPhone(order.getClient().getPhone());
         
-        List<OrderPreviewForSellerDto.ProductDto> products = order.getProductOrders().stream()
-                .map(this::mapToOrderPreviewForSellerDtoProductDto)
+        List<OrderPreviewDto.ProductDto> products = order.getProductOrders().stream()
+                .map(this::mapToOrderPreviewDtoProductDto)
                 .collect(Collectors.toList());
         dto.setProducts(products);
         
         double totalPrice = products.stream()
-                .mapToDouble(OrderPreviewForSellerDto.ProductDto::getSubtotal)
+                .mapToDouble(OrderPreviewDto.ProductDto::getSubtotal)
                 .sum();
         dto.setTotalPrice((float) totalPrice);
         
         return dto;
     }
 
-    private OrderPreviewForSellerDto.ProductDto mapToOrderPreviewForSellerDtoProductDto(ProductOrder productOrder) {
-        OrderPreviewForSellerDto.ProductDto dto = new OrderPreviewForSellerDto.ProductDto();
+    private OrderPreviewDto.ProductDto mapToOrderPreviewDtoProductDto(ProductOrder productOrder) {
+        OrderPreviewDto.ProductDto dto = new OrderPreviewDto.ProductDto();
         dto.setProductId(productOrder.getProduct().getId());
         dto.setProductName(productOrder.getProduct().getName());
         dto.setQuantity(productOrder.getQuantity());
