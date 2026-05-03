@@ -196,13 +196,13 @@ public class OrderService {
         }
 
         if(from != null && to != null && from.isBefore(to)){
-            orders = orderRepository.findWithClientAndProductOrdersWithProductByStatusInAndTimestampAfterAndTimestampBefore(statuses, from.atStartOfDay(), to.plusDays(1l).atStartOfDay(), pageable);
+            orders = orderRepository.findWithClientAndWithProductOrdersWithProductByStatusInAndTimestampAfterAndTimestampBefore(statuses, from.atStartOfDay(), to.plusDays(1l).atStartOfDay(), pageable);
         }else if(from != null){
-            orders = orderRepository.findWithClientAndProductOrdersWithProductByStatusInAndTimestampAfter(statuses, from.atStartOfDay(), pageable);
+            orders = orderRepository.findWithClientAndWithProductOrdersWithProductByStatusInAndTimestampAfter(statuses, from.atStartOfDay(), pageable);
         }else if(to != null){
-            orders = orderRepository.findWithClientAndProductOrdersWithProductByStatusInAndTimestampBefore(statuses, to.plusDays(1l).atStartOfDay(), pageable);
+            orders = orderRepository.findWithClientAndWithProductOrdersWithProductByStatusInAndTimestampBefore(statuses, to.plusDays(1l).atStartOfDay(), pageable);
         }else{
-            orders = orderRepository.findWithClientAndProductOrdersWithProductByStatusIn(statuses, pageable);
+            orders = orderRepository.findWithClientAndWithProductOrdersWithProductByStatusIn(statuses, pageable);
         }
 
         List<OrderPreviewDto> dtos = orders.getContent().stream()

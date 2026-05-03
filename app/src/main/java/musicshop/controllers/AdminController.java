@@ -18,6 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import musicshop.controllers.util.PaginationForThymeleaf;
 import musicshop.dto.CategoryFullDto;
+import musicshop.dto.ClientForAdminDto;
+import musicshop.dto.ClientPreviewDto;
 import musicshop.dto.DeliveryDto;
 import musicshop.dto.OrderPreviewDto;
 import musicshop.dto.PictureFullDto;
@@ -28,6 +30,7 @@ import musicshop.entities.Admin;
 import musicshop.entities.Category;
 import musicshop.entities.Seller;
 import musicshop.services.CategoryService;
+import musicshop.services.ClientService;
 import musicshop.services.DeliveryService;
 import musicshop.services.OrderService;
 import musicshop.services.ProductService;
@@ -58,6 +61,9 @@ public class AdminController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private ClientService clientService;
 
     @GetMapping("/login")
     public String admin(){
@@ -187,6 +193,36 @@ public class AdminController {
         model.addAttribute("pagesAfter", pagination.getPagesAfter(currentPage, lastPage));
         model.addAttribute("lastPage", pagination.getLastPage(currentPage, lastPage));
         return "admin/orders";
+    }
+
+    @GetMapping("/clients")
+    public String showClients(
+        Model model,
+        @RequestParam(value = "search", required = false) String search,
+        @RequestParam(value = "page", required = false) Integer page){
+        Page<ClientPreviewDto> clients = clientService.getClientsForAdmin(search, page);
+
+        model.addAttribute("clients", clients);
+        model.addAttribute("search", search == null ? "" : search);
+
+        Integer currentPage = clients.getNumber()+1;
+        Integer lastPage = clients.getTotalPages();
+        model.addAttribute("firstPage", pagination.getFirstPage(currentPage));
+        model.addAttribute("pagesBefore", pagination.getPagesBefore(currentPage));
+        model.addAttribute("currentPage", currentPage);
+        model.addAttribute("pagesAfter", pagination.getPagesAfter(currentPage, lastPage));
+        model.addAttribute("lastPage", pagination.getLastPage(currentPage, lastPage));
+        return "admin/clients";
+    }
+
+    @GetMapping("/clients/{id}")
+    public String showClient(
+        Model model,
+        @PathVariable("id") Long clietnId){
+        ClientForAdminDto client = clientService.getClientsForAdmin(clietnId);
+
+        model.addAttribute("client", client);
+        return "admin/client_card";
     }
 
 }

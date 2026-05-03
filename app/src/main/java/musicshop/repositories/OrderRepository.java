@@ -49,15 +49,17 @@ public interface OrderRepository extends JpaRepository<Order, Long>{
                           @Param("expectedStatus") Order.Status expectedStatus);
 
     @EntityGraph(attributePaths = {"productOrders.product", "client"})
-    Page<Order> findWithClientAndProductOrdersWithProductByStatusIn(List<Order.Status> statuses, Pageable pageable);
+    Page<Order> findWithClientAndWithProductOrdersWithProductByStatusIn(List<Order.Status> statuses, Pageable pageable);
 
     @EntityGraph(attributePaths = {"productOrders.product", "client"})
-    Page<Order> findWithClientAndProductOrdersWithProductByStatusInAndTimestampAfter(List<Order.Status> statuses, LocalDateTime from, Pageable pageable);
+    Page<Order> findWithClientAndWithProductOrdersWithProductByStatusInAndTimestampAfter(List<Order.Status> statuses, LocalDateTime from, Pageable pageable);
 
     @EntityGraph(attributePaths = {"productOrders.product", "client"})
-    Page<Order> findWithClientAndProductOrdersWithProductByStatusInAndTimestampBefore(List<Order.Status> statuses, LocalDateTime to, Pageable pageable);
+    Page<Order> findWithClientAndWithProductOrdersWithProductByStatusInAndTimestampBefore(List<Order.Status> statuses, LocalDateTime to, Pageable pageable);
 
     @EntityGraph(attributePaths = {"productOrders.product", "client"})
-    Page<Order> findWithClientAndProductOrdersWithProductByStatusInAndTimestampAfterAndTimestampBefore(List<Order.Status> statuses, LocalDateTime from, LocalDateTime to, Pageable pageable);
+    Page<Order> findWithClientAndWithProductOrdersWithProductByStatusInAndTimestampAfterAndTimestampBefore(List<Order.Status> statuses, LocalDateTime from, LocalDateTime to, Pageable pageable);
 
+    @EntityGraph(attributePaths = "productOrders.product")
+    List<Order> findWithProductOrdersWithProductByStatusNotInAndClientId(List<Order.Status> statuses, Long clientId);
 }
